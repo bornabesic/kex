@@ -19,11 +19,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream>
 #include <cstdlib>
 
+#include <SDL.h>
+
 #ifdef KEX_USE_GLEW
-#include <GL/glew.h>
+#include "GL/glew.h"
 #endif
 
 int main() {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        std::cout << "Could not initialize SDL: " << SDL_GetError() << '\n';
+        std::exit(1);
+    }
+
+    SDL_Window *window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
+                                          SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
+
+    SDL_GLContext ctx = SDL_GL_CreateContext(window);
+
 #ifdef KEX_USE_GLEW
     // TODO Move GLEW initialization into the library
     const GLenum glew_status = glewInit();
