@@ -28,9 +28,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/texture.h>
 
 int main() {
-    kex::Texture texture("/tmp/texture.png");
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
         std::cout << "Could not initialize SDL: " << SDL_GetError() << '\n';
         std::exit(1);
     }
@@ -42,12 +44,18 @@ int main() {
 
 #ifdef KEX_USE_GLEW
     // TODO Move GLEW initialization into the library
+    glewExperimental = GL_TRUE;
     const GLenum glew_status = glewInit();
     if (glew_status != GLEW_OK) {
         std::cout << "Could not initialize GLEW: " << glewGetErrorString(glew_status) << '\n';
         std::exit(1);
     }
 #endif
+
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
+
+    kex::Texture texture("/tmp/tex.png");
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     return 0;

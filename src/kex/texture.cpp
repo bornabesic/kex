@@ -17,23 +17,52 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <memory>
+#include <filesystem>
 
 #ifdef KEX_USE_GLEW
 #include <GL/glew.h>
 #endif
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include <kex/texture.h>
+#include <iostream>
 
 namespace kex {
-    Texture::Texture(const std::string &path) : impl(std::make_unique<Texture::Impl>(path)) {}
-
-    Texture::~Texture() = default;
 
     class Texture::Impl {
     public:
-        explicit Impl(const std::string &path) {
+        explicit Impl(const std::string &path, const bool mipmap) {
+            if (!std::filesystem::exists(path)) {
+                throw std::runtime_error(path + " does not exist.");
+            }
+
+            // Load the image
+            int n_original_channels;
+            data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
+            if (data == nullptr) {
+                throw std::runtime_error("Could not load texture from " + path);
+            }
+
+            // Generate an OpenGL texture
             glGenTextures(1, &id);
-            // TODO Load image
+            glBindTexture(GL_TEXTURE_2D, id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            if (mipmap) {
+                glGenerateMipmap(GL_TEXTURE_2D);
+            }
+
+            glBindTexture(GL_TEXTURE_2D, 0); // Unbind
+            stbi_image_free(data); // Free image data from RAM
+        }
+
+        void bind() const {
+            glBindTexture(GL_TEXTURE_2D, id);
         }
 
         ~Impl() {
@@ -42,6 +71,17 @@ namespace kex {
 
     private:
         GLuint id{};
+        unsigned char *data;
+        int width;
+        int height;
+
+        friend Texture;
     };
+
+    Texture::Texture(const std::string &path, const bool mipmap) : impl(std::make_unique<Texture::Impl>(path, mipmap)) {}
+    void Texture::bind() const { impl->bind(); }
+    int Texture::get_width() const { return impl->width; }
+    int Texture::get_height() const { return impl->height; }
+    Texture::~Texture() = default;
 
 } // kex

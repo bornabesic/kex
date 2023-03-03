@@ -6,7 +6,7 @@ project(
     HOMEPAGE_URL https://github.com/bornabesic/kex
 )
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 message("${CMAKE_PROJECT_NAME} version: ${CMAKE_PROJECT_VERSION}")
@@ -39,6 +39,15 @@ if (KEX_USE_GLEW)
     include_directories(${glew_SOURCE_DIR}/include)
 endif ()
 
+# stb
+FetchContent_Declare(
+    stb
+    GIT_REPOSITORY https://github.com/nothings/stb
+)
+FetchContent_MakeAvailable(stb)
+include_directories(${stb_SOURCE_DIR})
+
+# Kex
 include_directories(include)
 add_subdirectory(src)
 
