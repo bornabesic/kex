@@ -17,8 +17,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
+#include <cstdlib>
+
+#define GLEW_NO_GLU
+#include <GL/glew.h>
 
 int main() {
+    // TODO Move GLEW initialization into the library
+    const GLenum glew_status = glewInit();
+    if (glew_status != GLEW_OK) {
+        std::cout << "Could not initialize GLEW: " << glewGetErrorString(glew_status) << '\n';
+        std::exit(1);
+    }
+
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     return 0;
 }

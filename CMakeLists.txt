@@ -28,6 +28,7 @@ if (KEX_USE_GLEW)
     )
     FetchContent_MakeAvailable(glew)
     add_subdirectory(${glew_SOURCE_DIR}/build/cmake ${glew_BINARY_DIR})
+    include_directories(${glew_SOURCE_DIR}/include)
 endif ()
 
 # Examples
