@@ -19,15 +19,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream>
 #include <cstdlib>
 
+#ifdef KEX_USE_GLEW
 #include <GL/glew.h>
+#endif
 
 int main() {
+#ifdef KEX_USE_GLEW
     // TODO Move GLEW initialization into the library
     const GLenum glew_status = glewInit();
     if (glew_status != GLEW_OK) {
         std::cout << "Could not initialize GLEW: " << glewGetErrorString(glew_status) << '\n';
         std::exit(1);
     }
+#endif
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     return 0;

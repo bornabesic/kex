@@ -16,9 +16,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Texture.h"
-#include <GL/glew.h>
 #include <memory>
+
+#ifdef KEX_USE_GLEW
+#include <GL/glew.h>
+#endif
+
+#include <kex/texture.h>
 
 namespace kex {
     Texture::Texture(const std::string &path) : impl(std::make_unique<Texture::Impl>(path)) {}

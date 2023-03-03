@@ -15,7 +15,12 @@ message("${CMAKE_PROJECT_NAME} version: ${CMAKE_PROJECT_VERSION}")
 option(KEX_USE_GLEW "Use GLEW" ON)
 option(KEX_BUILD_EXAMPLES "Build examples" OFF)
 
-add_definitions(-DKEX_USE_GLEW=$<BOOL:KEX_USE_GLEW>)
+message("KEX_USE_GLEW: ${KEX_USE_GLEW}")
+message("KEX_BUILD_EXAMPLES: ${KEX_BUILD_EXAMPLES}")
+
+if (KEX_USE_GLEW)
+    add_definitions(-DKEX_USE_GLEW)
+endif ()
 
 # Dependencies
 include(FetchContent)
