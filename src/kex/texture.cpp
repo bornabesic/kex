@@ -27,6 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace kex {
     Texture::Texture(const std::string &path) : impl(std::make_unique<Texture::Impl>(path)) {}
 
+    Texture::~Texture() = default;
+
     class Texture::Impl {
     public:
         explicit Impl(const std::string &path) {

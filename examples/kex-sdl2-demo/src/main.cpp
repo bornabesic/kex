@@ -25,7 +25,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "GL/glew.h"
 #endif
 
+#include <kex/texture.h>
+
 int main() {
+    kex::Texture texture("/tmp/texture.png");
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cout << "Could not initialize SDL: " << SDL_GetError() << '\n';
         std::exit(1);

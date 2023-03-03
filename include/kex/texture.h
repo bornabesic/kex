@@ -28,7 +28,7 @@ namespace kex {
     public:
         explicit Texture(const std::string &path);
 
-        ~Texture() = default;
+        ~Texture();
 
     private:
         class Impl;
