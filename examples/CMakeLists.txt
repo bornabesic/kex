@@ -6,4 +6,4 @@ target_compile_definitions(
     PROJECT_NAME="${CMAKE_PROJECT_NAME}"
     PROJECT_VERSION="${CMAKE_PROJECT_VERSION}"
 )
-target_link_libraries(kex-demo glew_s)
+target_link_libraries(kex-demo kex)

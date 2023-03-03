@@ -16,19 +16,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <cstdlib>
+#ifndef KEX_TEXTURE_H
+#define KEX_TEXTURE_H
 
-#include <GL/glew.h>
+#include <string>
+#include <memory>
 
-int main() {
-    // TODO Move GLEW initialization into the library
-    const GLenum glew_status = glewInit();
-    if (glew_status != GLEW_OK) {
-        std::cout << "Could not initialize GLEW: " << glewGetErrorString(glew_status) << '\n';
-        std::exit(1);
-    }
+namespace kex {
 
-    std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
-    return 0;
-}
+    class Texture {
+    public:
+        explicit Texture(const std::string &path);
+
+        ~Texture() = default;
+
+    private:
+        class Impl;
+
+        std::unique_ptr<Impl> impl;
+    };
+
+} // kex
+
+#endif //KEX_TEXTURE_H
