@@ -70,10 +70,10 @@ namespace kex {
         }
 
     private:
-        GLuint id{};
-        unsigned char *data;
-        int width;
-        int height;
+        GLuint id = 0;
+        unsigned char *data = nullptr;
+        int width = 0;
+        int height = 0;
 
         friend Texture;
     };
