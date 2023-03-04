@@ -40,6 +40,7 @@ int main() {
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
 
     kex::initialize();
+    kex::Texture texture("/tmp/tex.png");
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     return 0;
