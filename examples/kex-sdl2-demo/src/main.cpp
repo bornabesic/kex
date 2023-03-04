@@ -21,10 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#ifdef KEX_USE_GLEW
-#include "GL/glew.h"
-#endif
-
+#include <kex/kex.h>
 #include <kex/texture.h>
 
 int main() {
@@ -42,19 +39,7 @@ int main() {
 
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
 
-#ifdef KEX_USE_GLEW
-    // TODO Move GLEW initialization into the library
-    glewExperimental = GL_TRUE;
-    const GLenum glew_status = glewInit();
-    if (glew_status != GLEW_OK) {
-        std::cout << "Could not initialize GLEW: " << glewGetErrorString(glew_status) << '\n';
-        std::exit(1);
-    }
-#endif
-
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
-
+    kex::initialize();
     kex::Texture texture("/tmp/tex.png");
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
