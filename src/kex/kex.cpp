@@ -16,31 +16,28 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stdexcept>
 #include <iostream>
-#include <cstdlib>
 
-#include <SDL.h>
+#ifdef KEX_USE_GLEW
+#include "GL/glew.h"
+#endif
 
 #include <kex/kex.h>
-#include <kex/texture.h>
 
-int main() {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+namespace kex {
 
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
-        std::cout << "Could not initialize SDL: " << SDL_GetError() << '\n';
-        std::exit(1);
+    void initialize() {
+#ifdef KEX_USE_GLEW
+        glewExperimental = GL_TRUE;
+        const GLenum glew_status = glewInit();
+        if (glew_status != GLEW_OK) {
+            throw std::runtime_error(reinterpret_cast<const char *>(glewGetErrorString(glew_status)));
+        }
+#endif
+
+        std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
+        std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
     }
 
-    SDL_Window *window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
-                                          SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
-
-    SDL_GLContext ctx = SDL_GL_CreateContext(window);
-
-    kex::initialize();
-
-    std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
-    return 0;
 }
