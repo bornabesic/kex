@@ -40,7 +40,7 @@ namespace kex {
 
             // Load the image
             int n_original_channels;
-            data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
+            unsigned char *data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
             if (data == nullptr) {
                 throw std::runtime_error("Could not load texture from " + path);
             }
@@ -62,7 +62,7 @@ namespace kex {
         }
 
         void bind() const {
-            glBindTexture(GL_TEXTURE_2D, id);
+            Texture::bind(id);
         }
 
         ~Impl() {
@@ -71,14 +71,15 @@ namespace kex {
 
     private:
         GLuint id = 0;
-        unsigned char *data = nullptr;
         int width = 0;
         int height = 0;
 
         friend Texture;
     };
 
-    Texture::Texture(const std::string &path, const bool mipmap) : impl(std::make_unique<Texture::Impl>(path, mipmap)) {}
+    Texture::Texture(const std::string &path, const bool mipmap) : impl(
+            std::make_unique<Texture::Impl>(path, mipmap)) {}
+
     void Texture::bind() const { impl->bind(); }
 
     int Texture::get_width() const { return impl->width; }
@@ -86,6 +87,10 @@ namespace kex {
     int Texture::get_height() const { return impl->height; }
 
     unsigned int Texture::get_id() const { return impl->id; }
+
+    void Texture::bind(unsigned int id) {
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
 
     Texture::~Texture() = default;
 

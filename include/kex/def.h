@@ -16,33 +16,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SPRITE_H
-#define KEX_SPRITE_H
-
-#include <memory>
-#include <kex/texture.h>
-#include <kex/def.h>
+#ifndef KEX_DEF_H
+#define KEX_DEF_H
 
 namespace kex {
 
-    class Sprite {
-    public:
-        explicit Sprite(const Texture &texture);
-
-        explicit Sprite(const Texture &texture, const RectangleDef &region);
-
-        [[nodiscard]] const Texture &get_texture() const;
-
-        [[nodiscard]] const RectangleDef &get_texture_region() const;
-
-        ~Sprite();
-
-    private:
-        class Impl;
-
-        std::unique_ptr<Impl> impl;
+    struct RectangleDef {
+        int x, y, w, h;
     };
 
 }
 
-#endif //KEX_SPRITE_H
+#endif //KEX_DEF_H

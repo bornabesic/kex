@@ -16,26 +16,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SPRITE_H
-#define KEX_SPRITE_H
+#ifndef KEX_SPRITEBATCH_H
+#define KEX_SPRITEBATCH_H
 
 #include <memory>
-#include <kex/texture.h>
-#include <kex/def.h>
+#include <kex/sprite.h>
 
 namespace kex {
 
-    class Sprite {
+    class SpriteBatch {
     public:
-        explicit Sprite(const Texture &texture);
+        SpriteBatch();
 
-        explicit Sprite(const Texture &texture, const RectangleDef &region);
+        void add(const Sprite &sprite);
 
-        [[nodiscard]] const Texture &get_texture() const;
-
-        [[nodiscard]] const RectangleDef &get_texture_region() const;
-
-        ~Sprite();
+        ~SpriteBatch();
 
     private:
         class Impl;
@@ -45,4 +40,5 @@ namespace kex {
 
 }
 
-#endif //KEX_SPRITE_H
+
+#endif //KEX_SPRITEBATCH_H

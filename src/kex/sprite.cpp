@@ -22,21 +22,27 @@ namespace kex {
 
     class Sprite::Impl {
     public:
-        explicit Impl(const Texture &texture) : texture(texture) {}
+        explicit Impl(const Texture &texture) : texture(texture),
+                                                texture_region({0, 0, texture.get_width(), texture.get_height()}) {}
 
-        explicit Impl(const Texture &texture, int x, int y, int w, int h) : texture(texture), x(x), y(y), w(w), h(h) {}
+        explicit Impl(const Texture &texture, const RectangleDef &rectangle) : texture(texture),
+                                                                               texture_region(rectangle) {}
 
     private:
-        int x, y, w, h;
         const Texture &texture;
+        const RectangleDef texture_region;
 
         friend Sprite;
     };
 
     Sprite::Sprite(const kex::Texture &texture) : impl(std::make_unique<Impl>(texture)) {}
 
-    Sprite::Sprite(const Texture &texture, int x, int y, int w, int h) : impl(
-            std::make_unique<Impl>(texture, x, y, w, h)) {}
+    Sprite::Sprite(const Texture &texture, const RectangleDef &region) : impl(
+            std::make_unique<Impl>(texture, region)) {}
+
+    const Texture &Sprite::get_texture() const { return impl->texture; }
+
+    const RectangleDef &Sprite::get_texture_region() const { return impl->texture_region; }
 
     Sprite::~Sprite() = default;
 
