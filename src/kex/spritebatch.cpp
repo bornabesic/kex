@@ -42,12 +42,28 @@ namespace kex {
 
         void add(const Sprite &sprite) {
             const auto &texture = sprite.get_texture();
-            groups[texture.get_id()].push_back(sprite.get_texture_region());
+            groups[texture.get_id()].push_back(&sprite);
         }
 
         ~Impl() {
-            for (const auto &[texture_id, texture_region]: groups) {
-                Texture::bind(texture_id);
+            for (const auto &[texture_id, sprites]: groups) {
+                const auto &texture = sprites[0]->get_texture();
+
+                std::vector<float> texture_coordinates_data;
+                texture_coordinates_data.reserve(sprites.size() * 4 * 2);
+                for (const auto *sprite: sprites) {
+                    texture_coordinates_data.insert(
+                            texture_coordinates_data.end(),
+                            {
+                                    sprite->get_u_min(), sprite->get_v_min(),
+                                    sprite->get_u_max(), sprite->get_v_min(),
+                                    sprite->get_u_max(), sprite->get_v_max(),
+                                    sprite->get_u_min(), sprite->get_v_max(),
+                            }
+                    );
+                }
+
+                texture.bind();
                 // TODO Draw
             }
 
@@ -56,7 +72,7 @@ namespace kex {
 
     private:
         GLuint quad_buffer = 0;
-        std::unordered_map<unsigned int, std::vector<RectangleDef>> groups;
+        std::unordered_map<unsigned int, std::vector<const Sprite *>> groups;
 
         friend SpriteBatch;
     };

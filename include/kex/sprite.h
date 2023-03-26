@@ -31,11 +31,19 @@ namespace kex {
 
         explicit Sprite(const Texture &texture, const RectangleDef &region);
 
+        ~Sprite();
+
         [[nodiscard]] const Texture &get_texture() const;
 
         [[nodiscard]] const RectangleDef &get_texture_region() const;
 
-        ~Sprite();
+        [[nodiscard]] float get_u_min() const;
+
+        [[nodiscard]] float get_u_max() const;
+
+        [[nodiscard]] float get_v_min() const;
+
+        [[nodiscard]] float get_v_max() const;
 
     private:
         class Impl;
