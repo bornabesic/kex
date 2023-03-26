@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <kex/kex.h>
 #include <kex/texture.h>
+#include <kex/sprite.h>
 
 int main() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_ES);
@@ -41,6 +42,7 @@ int main() {
 
     kex::initialize();
     kex::Texture texture("/tmp/tex.png");
+    kex::Sprite sprite(texture);
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     return 0;
