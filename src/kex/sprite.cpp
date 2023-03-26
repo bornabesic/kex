@@ -29,6 +29,8 @@ namespace kex {
     private:
         int x, y, w, h;
         const Texture &texture;
+
+        friend Sprite;
     };
 
     Sprite::Sprite(const kex::Texture &texture) : impl(std::make_unique<Impl>(texture)) {}
