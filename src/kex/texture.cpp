@@ -80,8 +80,13 @@ namespace kex {
 
     Texture::Texture(const std::string &path, const bool mipmap) : impl(std::make_unique<Texture::Impl>(path, mipmap)) {}
     void Texture::bind() const { impl->bind(); }
+
     int Texture::get_width() const { return impl->width; }
+
     int Texture::get_height() const { return impl->height; }
+
+    unsigned int Texture::get_id() const { return impl->id; }
+
     Texture::~Texture() = default;
 
 } // kex

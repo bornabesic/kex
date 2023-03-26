@@ -30,6 +30,7 @@ namespace kex {
         void bind() const;
         [[nodiscard]] int get_width() const;
         [[nodiscard]] int get_height() const;
+        [[nodiscard]] unsigned int get_id() const;
         ~Texture();
 
     private:
