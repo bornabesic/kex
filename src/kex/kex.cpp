@@ -24,8 +24,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 #include <kex/kex.h>
+#include <kex/shader.h>
+#include <kex/program.h>
 
 namespace kex {
+
+    static constexpr float quad_data[] = {
+            -1.f, -1.f,
+            1.f, -1.f,
+            1.f, 1.f,
+            -1.f, 1.f,
+    };
+
+    static GLuint quad_buffer = 0;
+
+    static constexpr auto vertex_shader_source = R"(
+        #version 300 es
+
+        void main() {
+            gl_Position = vec4(0, 0, 0, 0);
+        }
+    )";
+
+    static constexpr auto fragment_shader_source = R"(
+        #version 300 es
+
+        out highp vec4 color;
+
+        void main() {
+            color = vec4(1, 0, 0, 1);
+        }
+    )";
 
     void initialize() {
 #ifdef KEX_USE_GLEW
@@ -36,8 +65,25 @@ namespace kex {
         }
 #endif
 
+        // Initialize the quad buffer
+        glGenBuffers(1, &quad_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, quad_buffer);
+        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), quad_data, GL_STATIC_DRAW);
+
+        // Initialize shaders
+        VertexShader vertex_shader(vertex_shader_source);
+        FragmentShader fragment_shader(fragment_shader_source);
+        Program program(vertex_shader, fragment_shader);
+
+        // Use the program
+        program.use();
+
         std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
         std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
+    }
+
+    void shutdown() {
+        glDeleteBuffers(1, &quad_buffer);
     }
 
 }

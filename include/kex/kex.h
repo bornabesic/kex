@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
     void initialize();
+    void shutdown();
 }
 
 #endif //KEX_KEX_H
