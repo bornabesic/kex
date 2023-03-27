@@ -16,29 +16,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SHADER_H
-#define KEX_SHADER_H
+#ifndef KEX_PROGRAM_H
+#define KEX_PROGRAM_H
 
-#include <string>
+#include <kex/shader.h>
 #include <memory>
 
 namespace kex {
 
-    enum ShaderType {
-        VERTEX,
-        FRAGMENT,
-    };
-
-    template<ShaderType T>
-    class Shader {
+    class Program {
     public:
-        explicit Shader(const std::string &source);
+        Program(const VertexShader &vertex_shader, const FragmentShader &fragment_shader);
 
-        [[nodiscard]] constexpr ShaderType get_type() const;
-
-        [[nodiscard]] unsigned int get_id() const;
-
-        ~Shader();
+        void use() const;
 
     private:
         class Impl;
@@ -46,9 +36,7 @@ namespace kex {
         std::unique_ptr<Impl> impl;
     };
 
-    using VertexShader = Shader<ShaderType::VERTEX>;
-    using FragmentShader = Shader<ShaderType::FRAGMENT>;
-
 }
 
-#endif //KEX_SHADER_H
+
+#endif //KEX_PROGRAM_H

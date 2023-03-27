@@ -45,7 +45,7 @@ int main() {
     kex::initialize();
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
-    kex::Shader<kex::ShaderType::VERTEX> vertex_shader("void main() { gl_Position = vec4(0, 0, 0, 1); }");
+    kex::VertexShader vertex_shader("void main() { gl_Position = vec4(0, 0, 0, 1); }");
     {
         kex::SpriteBatch batch;
         batch.add(sprite);

@@ -58,6 +58,9 @@ namespace kex {
     constexpr ShaderType Shader<T>::get_type() const { return T; }
 
     template<ShaderType T>
+    unsigned int Shader<T>::get_id() const { return impl->id; }
+
+    template<ShaderType T>
     Shader<T>::~Shader() = default;
 
     // Specializations
