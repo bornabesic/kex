@@ -34,8 +34,11 @@ namespace kex {
             } else if constexpr (T == ShaderType::FRAGMENT) {
                 type_gl = GL_FRAGMENT_SHADER;
             }
+
+            const auto *source_ptr = source.c_str();
             id = glCreateShader(type_gl);
-            // TODO Compile
+            glShaderSource(id, 1, &source_ptr, nullptr);
+            glCompileShader(id);
         }
 
         ~Impl() {
