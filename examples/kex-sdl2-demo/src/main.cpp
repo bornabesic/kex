@@ -25,6 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/texture.h>
 #include <kex/sprite.h>
 #include <kex/spritebatch.h>
+#include <kex/shader.h>
 
 int main() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_ES);
@@ -44,6 +45,7 @@ int main() {
     kex::initialize();
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
+    kex::Shader<kex::ShaderType::VERTEX> vertex_shader("void main() { gl_Position = vec4(0, 0, 0, 1); }");
     {
         kex::SpriteBatch batch;
         batch.add(sprite);
