@@ -30,6 +30,8 @@ namespace kex {
 
         void use() const;
 
+        ~Program();
+
     private:
         class Impl;
 

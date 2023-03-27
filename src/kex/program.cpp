@@ -52,4 +52,6 @@ namespace kex {
 
     void Program::use() const { impl->use(); }
 
+    Program::~Program() = default;
+
 }
