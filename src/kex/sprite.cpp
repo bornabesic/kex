@@ -33,12 +33,15 @@ namespace kex {
                 u_min(compute_u_min(rectangle, texture)),
                 u_max(compute_u_max(rectangle, texture)),
                 v_min(compute_v_min(rectangle, texture)),
-                v_max(compute_v_max(rectangle, texture)) {}
+                v_max(compute_v_max(rectangle, texture)),
+                w(rectangle.w),
+                h(rectangle.h) {}
 
     private:
         const Texture &texture;
         const RectangleDef texture_region;
         const float u_min, u_max, v_min, v_max;
+        float x = 0, y = 0, w, h;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
             return static_cast<float>(region.x) / texture.get_width();
@@ -75,6 +78,18 @@ namespace kex {
     float Sprite::get_v_min() const { return impl->v_min; }
 
     float Sprite::get_v_max() const { return impl->v_max; }
+
+    int Sprite::get_width() const { return impl->w; }
+
+    int Sprite::get_height() const { return impl->h; }
+
+    float Sprite::get_x() const { return impl->x; }
+
+    float Sprite::get_y() const { return impl->y; }
+
+    void Sprite::set_x(float x) { impl->x = x; }
+
+    void Sprite::set_y(float y) { impl->y = y; }
 
     Sprite::~Sprite() = default;
 

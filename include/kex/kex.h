@@ -23,9 +23,10 @@ namespace kex {
 
     // TODO Remove this
     struct SpriteBuffers {
-        unsigned int base_positions = 0;
-        unsigned int positions = 0;
-        unsigned int tex_coords = 0;
+        unsigned int v_positions = 0;
+        unsigned int v_tex_coords = 0;
+        unsigned int s_positions = 0;
+        unsigned int s_sizes = 0;
     };
 
     extern SpriteBuffers sprite_buffers;

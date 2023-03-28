@@ -23,6 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/kex.h>
 #include <vector>
 
+#ifdef KEX_USE_GLEW
+#include <GL/glew.h>
+#endif
+
 namespace kex {
 
     class SpriteBatch::Impl {
@@ -35,26 +39,36 @@ namespace kex {
         }
 
         ~Impl() {
+            std::vector<float> v_tex_coords;
+            std::vector<float> s_positions;
+            std::vector<float> s_sizes;
+
             for (const auto &[texture_id, sprites]: groups) {
                 const auto &texture = sprites[0]->get_texture();
 
-                std::vector<float> positions_data;
-                std::vector<float> texture_coords_data;
-                positions_data.reserve(sprites.size() * 4 * 2);
-                texture_coords_data.reserve(sprites.size() * 4 * 2);
+                v_tex_coords.clear();
+                s_positions.clear();
+
+                v_tex_coords.reserve(sprites.size() * 4 * 2);
+                s_positions.reserve(sprites.size() * 2);
+                s_sizes.reserve(sprites.size() * 2);
                 for (const auto *sprite: sprites) {
-                    const auto region = sprite->get_texture_region();
-                    positions_data.insert(
-                            positions_data.end(),
+                    s_positions.insert(
+                            s_positions.end(),
                             {
-                                    static_cast<float>(region.x), static_cast<float>(region.y + region.h),
-                                    static_cast<float>(region.x + region.w), static_cast<float>(region.y + region.h),
-                                    static_cast<float>(region.x), static_cast<float>(region.y),
-                                    static_cast<float>(region.x + region.w), static_cast<float>(region.y)
+                                    static_cast<float>(sprite->get_x()),
+                                    static_cast<float>(sprite->get_y())
                             }
                     );
-                    texture_coords_data.insert(
-                            texture_coords_data.end(),
+                    s_sizes.insert(
+                            s_sizes.end(),
+                            {
+                                    static_cast<float>(sprite->get_width()),
+                                    static_cast<float>(sprite->get_height()),
+                            }
+                    );
+                    v_tex_coords.insert(
+                            v_tex_coords.end(),
                             {
                                     sprite->get_u_min(), sprite->get_v_min(),
                                     sprite->get_u_max(), sprite->get_v_min(),
@@ -64,15 +78,20 @@ namespace kex {
                     );
                 }
 
-                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.positions);
+                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_positions);
                 glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
                              GL_STREAM_DRAW); // Orphan
-                glBufferSubData(GL_ARRAY_BUFFER, 0, positions_data.size() * sizeof(float), positions_data.data());
+                glBufferSubData(GL_ARRAY_BUFFER, 0, s_positions.size() * sizeof(float), s_positions.data());
 
-                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.tex_coords);
+                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_sizes);
                 glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
                              GL_STREAM_DRAW); // Orphan
-                glBufferSubData(GL_ARRAY_BUFFER, 0, texture_coords_data.size() * sizeof(float), texture_coords_data.data());
+                glBufferSubData(GL_ARRAY_BUFFER, 0, s_sizes.size() * sizeof(float), s_sizes.data());
+
+                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_tex_coords);
+                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
+                             GL_STREAM_DRAW); // Orphan
+                glBufferSubData(GL_ARRAY_BUFFER, 0, v_tex_coords.size() * sizeof(float), v_tex_coords.data());
 
                 texture.bind();
                 glDrawArraysInstanced(

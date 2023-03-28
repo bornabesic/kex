@@ -26,6 +26,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/sprite.h>
 #include <kex/spritebatch.h>
 
+#if KEX_USE_GLEW
+#include <GL/glew.h>
+#endif
+
 int main() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -51,12 +55,18 @@ int main() {
 
     SDL_Event event;
     bool running = true;
+    constexpr float amplitude = 10.f;
+    float step = 0.f;
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
             }
         }
+
+        step += .2f;
+        sprite.set_x(SDL_sinf(step) * amplitude);
+        sprite.set_y(SDL_sinf(step) * amplitude);
 
         glClear(GL_COLOR_BUFFER_BIT);
         {

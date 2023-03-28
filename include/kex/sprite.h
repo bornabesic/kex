@@ -39,6 +39,18 @@ namespace kex {
 
         [[nodiscard]] const RectangleDef &get_texture_region() const;
 
+        [[nodiscard]] int get_width() const;
+
+        [[nodiscard]] int get_height() const;
+
+        [[nodiscard]] float get_x() const;
+
+        [[nodiscard]] float get_y() const;
+
+        void set_x(float x);
+
+        void set_y(float y);
+
         [[nodiscard]] float get_u_min() const;
 
         [[nodiscard]] float get_u_max() const;

@@ -20,22 +20,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream>
 
 #ifdef KEX_USE_GLEW
+
 #include "GL/glew.h"
+
 #endif
 
 #include <kex/kex.h>
 #include <kex/shader.h>
 #include <kex/program.h>
-#include <kex/sprite.h>
-
 
 namespace kex {
 
-    static constexpr float quad_data[] = {
-            -.5f, -.5f,
-            .5f, -.5f,
-            -.5f, .5f,
-            .5f, .5f,
+    static constexpr float normalized_positions_data[] = {
+            -1.f, -1.f,
+            1.f, -1.f,
+            -1.f, 1.f,
+            1.f, 1.f,
     };
 
     SpriteBuffers sprite_buffers;
@@ -47,11 +47,13 @@ namespace kex {
         layout (location = 0) in highp vec2 base_position_in;
         layout (location = 1) in highp vec2 position_in;
         layout (location = 2) in highp vec2 tex_coords_in;
+        layout (location = 3) in highp vec2 size_in;
 
         out highp vec2 tex_coords;
 
         void main() {
-            gl_Position = vec4(base_position_in, 0, 1);
+            highp vec2 position = (base_position_in * size_in + position_in) / vec2(800, 600);
+            gl_Position = vec4(position, 0, 1);
             tex_coords = tex_coords_in;
         }
     )";
@@ -88,29 +90,37 @@ namespace kex {
         glBindVertexArray(sprite_vao);
 
         // Initialize the quad buffer
-        glGenBuffers(1, &sprite_buffers.base_positions);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.base_positions);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), quad_data, GL_STATIC_DRAW);
+        glGenBuffers(1, &sprite_buffers.v_positions);
+        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_positions);
+        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), normalized_positions_data, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glVertexAttribDivisor(0, 0); // Same for all sprites
 
         // Initialize the positions buffer
-        glGenBuffers(1, &sprite_buffers.positions);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.positions);
+        glGenBuffers(1, &sprite_buffers.s_positions);
+        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_positions);
 
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glVertexAttribDivisor(1, 1); // One per sprite
 
         // Initialize the texture coordinates buffer
-        glGenBuffers(1, &sprite_buffers.tex_coords);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.tex_coords);
+        glGenBuffers(1, &sprite_buffers.v_tex_coords);
+        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_tex_coords);
 
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         // TODO glVertexAttribDivisor(2, 1); // One per sprite
+
+        // Initialize the sizes buffer
+        glGenBuffers(1, &sprite_buffers.s_sizes);
+        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_sizes);
+
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+        glVertexAttribDivisor(3, 1); // One per sprite
 
         // Initialize shaders
         vertex_shader = std::make_unique<VertexShader>(vertex_shader_source);
@@ -127,9 +137,9 @@ namespace kex {
     }
 
     void shutdown() {
-        glDeleteBuffers(1, &sprite_buffers.base_positions);
-        glDeleteBuffers(1, &sprite_buffers.positions);
-        glDeleteBuffers(1, &sprite_buffers.tex_coords);
+        glDeleteBuffers(1, &sprite_buffers.v_positions);
+        glDeleteBuffers(1, &sprite_buffers.s_positions);
+        glDeleteBuffers(1, &sprite_buffers.v_tex_coords);
     }
 
 }
