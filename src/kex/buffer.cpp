@@ -83,6 +83,8 @@ namespace kex {
         int bsize = 0;
 
         static GLuint current_id;
+
+        friend Buffer<T, U>;
     };
 
     template<BufferType T, BufferUsage U>
@@ -99,6 +101,9 @@ namespace kex {
 
     template<BufferType T, BufferUsage U>
     constexpr BufferUsage Buffer<T, U>::get_usage() const { return U; }
+
+    template<BufferType T, BufferUsage U>
+    unsigned int Buffer<T, U>::get_id() const { return impl->id; }
 
     template<BufferType T, BufferUsage U>
     void Buffer<T, U>::replace(const void *data, int size) { impl->replace(data, size); }

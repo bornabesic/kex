@@ -94,30 +94,34 @@ namespace kex {
         StaticArrayBuffer quad_buffer;
         quad_buffer.replace(normalized_positions_data, 4 * 2 * sizeof(float));
         quad_buffer.bind();
+        sprite_buffers.v_positions = quad_buffer.get_id();
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glVertexAttribDivisor(0, 0); // Same for all sprites
 
         // Initialize the positions buffer
-        glGenBuffers(1, &sprite_buffers.s_positions);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_positions);
+        StreamArrayBuffer positions_buffer;
+        positions_buffer.bind();
+        sprite_buffers.s_positions = positions_buffer.get_id();
 
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         glVertexAttribDivisor(1, 1); // One per sprite
 
         // Initialize the texture coordinates buffer
-        glGenBuffers(1, &sprite_buffers.v_tex_coords);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_tex_coords);
+        StreamArrayBuffer tex_coords_buffer;
+        tex_coords_buffer.bind();
+        sprite_buffers.v_tex_coords = tex_coords_buffer.get_id();
 
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
         // TODO glVertexAttribDivisor(2, 1); // One per sprite
 
         // Initialize the sizes buffer
-        glGenBuffers(1, &sprite_buffers.s_sizes);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_sizes);
+        StreamArrayBuffer sizes_buffer;
+        sizes_buffer.bind();
+        sprite_buffers.s_sizes = sizes_buffer.get_id();
 
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);

@@ -43,6 +43,8 @@ namespace kex {
 
         [[nodiscard]] constexpr BufferUsage get_usage() const;
 
+        [[nodiscard]] unsigned int get_id() const;
+
         void replace(const void *data, int size);
 
         void update(const void *data, int size, int offset = 0);
