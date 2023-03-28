@@ -45,19 +45,25 @@ namespace kex {
         }
 
         void replace(const void *data, int size) {
+            this->bind();
             glBufferData(target, size, data, usage);
         }
 
         void update(const void *data, int size, int offset) {
+            this->bind();
             glBufferSubData(target, 0, size, data);
         }
 
         void orphan(int size) {
+            this->bind();
             glBufferData(target, size == -1 ? bsize : size, nullptr, usage);
         }
 
         void bind() const {
+            if (Impl::current_id == id) return;
+
             glBindBuffer(target, id);
+            Impl::current_id = id;
         }
 
     private:
@@ -65,7 +71,12 @@ namespace kex {
         GLenum usage = 0;
         GLuint id = 0;
         int bsize = 0;
+
+        static GLuint current_id;
     };
+
+    template<BufferType T, BufferUsage U>
+    GLuint Buffer<T, U>::Impl::current_id = 0;
 
     template<BufferType T, BufferUsage U>
     Buffer<T, U>::Buffer() : impl(std::make_unique<Impl>()) {}
