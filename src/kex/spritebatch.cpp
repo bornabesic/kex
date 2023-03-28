@@ -79,20 +79,14 @@ namespace kex {
                     );
                 }
 
-                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_positions);
-                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
-                             GL_STREAM_DRAW); // Orphan
-                glBufferSubData(GL_ARRAY_BUFFER, 0, s_positions.size() * sizeof(float), s_positions.data());
+                sprite_buffers->s_positions.orphan(sprites.size() * 2 * sizeof(float));
+                sprite_buffers->s_positions.update(s_positions.data(), s_positions.size() * sizeof(float));
 
-                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.s_sizes);
-                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
-                             GL_STREAM_DRAW); // Orphan
-                glBufferSubData(GL_ARRAY_BUFFER, 0, s_sizes.size() * sizeof(float), s_sizes.data());
+                sprite_buffers->s_sizes.orphan(sprites.size() * 2 * sizeof(float));
+                sprite_buffers->s_sizes.update(s_sizes.data(), s_sizes.size() * sizeof(float));
 
-                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_tex_coords);
-                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
-                             GL_STREAM_DRAW); // Orphan
-                glBufferSubData(GL_ARRAY_BUFFER, 0, v_tex_coords.size() * sizeof(float), v_tex_coords.data());
+                sprite_buffers->v_tex_coords.orphan(sprites.size() * 4 * 2 * sizeof(float));
+                sprite_buffers->v_tex_coords.update(v_tex_coords.data(), v_tex_coords.size() * sizeof(float));
 
                 texture.bind();
                 glDrawArraysInstanced(

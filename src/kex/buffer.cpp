@@ -24,10 +24,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    template<BufferType T>
+    struct BufferState {
+        static GLuint bound_id;
+    };
+
+    template<BufferType T>
+    GLuint BufferState<T>::bound_id = 0;
+
     template<BufferType T, BufferUsage U>
     class Buffer<T, U>::Impl {
     public:
-        explicit Impl(int size) : bsize(size) {
+        explicit Impl(int size) : Impl() {
+            bsize = size;
             glBufferData(target, size, nullptr, usage);
         }
 
@@ -60,20 +69,20 @@ namespace kex {
         }
 
         void bind() const {
-            if (Impl::current_id == id) return;
+            if (BufferState<T>::bound_id == id) return;
 
             glBindBuffer(target, id);
-            Impl::current_id = id;
+            BufferState<T>::bound_id = id;
         }
 
         void unbind() const {
-            if (Impl::current_id != id) return;
+            if (BufferState<T>::bound_id != id) return;
             glBindBuffer(target, 0);
-            Impl::current_id = 0;
+            BufferState<T>::bound_id = 0;
         }
 
         [[nodiscard]] bool is_bound() const {
-            return Impl::current_id == id;
+            return BufferState<T>::bound_id == id;
         }
 
     private:
@@ -82,13 +91,8 @@ namespace kex {
         GLuint id = 0;
         int bsize = 0;
 
-        static GLuint current_id;
-
         friend Buffer<T, U>;
     };
-
-    template<BufferType T, BufferUsage U>
-    GLuint Buffer<T, U>::Impl::current_id = 0;
 
     template<BufferType T, BufferUsage U>
     Buffer<T, U>::Buffer() : impl(std::make_unique<Impl>()) {}

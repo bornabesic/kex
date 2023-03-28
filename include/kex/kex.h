@@ -19,17 +19,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef KEX_KEX_H
 #define KEX_KEX_H
 
+#include <kex/buffer.h>
+
 namespace kex {
 
     // TODO Remove this
     struct SpriteBuffers {
-        unsigned int v_positions = 0;
-        unsigned int v_tex_coords = 0;
-        unsigned int s_positions = 0;
-        unsigned int s_sizes = 0;
+        StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
+        StreamArrayBuffer v_tex_coords;
+        StreamArrayBuffer s_positions;
+        StreamArrayBuffer s_sizes;
     };
 
-    extern SpriteBuffers sprite_buffers;
+    extern std::unique_ptr<SpriteBuffers> sprite_buffers;
 
     void initialize();
     void shutdown();
