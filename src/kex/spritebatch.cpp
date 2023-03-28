@@ -48,6 +48,7 @@ namespace kex {
 
                 v_tex_coords.clear();
                 s_positions.clear();
+                s_sizes.clear();
 
                 v_tex_coords.reserve(sprites.size() * 4 * 2);
                 s_positions.reserve(sprites.size() * 2);
