@@ -51,7 +51,7 @@ namespace kex {
 
         void update(const void *data, int size, int offset) {
             this->bind();
-            glBufferSubData(target, 0, size, data);
+            glBufferSubData(target, offset, size, data);
         }
 
         void orphan(int size) {
