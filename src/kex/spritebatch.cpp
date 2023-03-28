@@ -56,8 +56,8 @@ namespace kex {
                     s_positions.insert(
                             s_positions.end(),
                             {
-                                    static_cast<float>(sprite->get_x()),
-                                    static_cast<float>(sprite->get_y())
+                                    static_cast<float>(sprite->get_position_x()),
+                                    static_cast<float>(sprite->get_position_y())
                             }
                     );
                     s_sizes.insert(

@@ -25,8 +25,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
-    extern unsigned int max_sprite_instances;
-
     class Sprite {
     public:
         explicit Sprite(const Texture &texture);
@@ -43,13 +41,13 @@ namespace kex {
 
         [[nodiscard]] int get_height() const;
 
-        [[nodiscard]] float get_x() const;
+        [[nodiscard]] float get_position_x() const;
 
-        [[nodiscard]] float get_y() const;
+        [[nodiscard]] float get_position_y() const;
 
-        void set_x(float x);
+        void set_position_x(float x);
 
-        void set_y(float y);
+        void set_position_y(float y);
 
         [[nodiscard]] float get_u_min() const;
 

@@ -76,8 +76,8 @@ int main() {
         }
 
         step += delta;
-        sprite.set_x(SDL_sinf(step * pi * 2) * amplitude);
-        sprite.set_y(SDL_sinf(step * pi * 2) * amplitude);
+        sprite.set_position_x(SDL_sinf(step * pi * 2) * amplitude);
+        sprite.set_position_y(SDL_sinf(step * pi * 2) * amplitude);
 
         glClear(GL_COLOR_BUFFER_BIT);
         {

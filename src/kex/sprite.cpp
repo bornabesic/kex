@@ -20,8 +20,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
-    unsigned int max_sprite_instances = 1024;
-
     class Sprite::Impl {
     public:
         explicit Impl(const Texture &texture) :
@@ -83,13 +81,13 @@ namespace kex {
 
     int Sprite::get_height() const { return impl->h; }
 
-    float Sprite::get_x() const { return impl->x; }
+    float Sprite::get_position_x() const { return impl->x; }
 
-    float Sprite::get_y() const { return impl->y; }
+    float Sprite::get_position_y() const { return impl->y; }
 
-    void Sprite::set_x(float x) { impl->x = x; }
+    void Sprite::set_position_x(float x) { impl->x = x; }
 
-    void Sprite::set_y(float y) { impl->y = y; }
+    void Sprite::set_position_y(float y) { impl->y = y; }
 
     Sprite::~Sprite() = default;
 
