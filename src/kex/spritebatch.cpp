@@ -65,12 +65,12 @@ namespace kex {
                 }
 
                 glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.positions);
-                glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr,
+                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
                              GL_STREAM_DRAW); // Orphan
                 glBufferSubData(GL_ARRAY_BUFFER, 0, positions_data.size() * sizeof(float), positions_data.data());
 
                 glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.tex_coords);
-                glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr,
+                glBufferData(GL_ARRAY_BUFFER, sprites.size() * 4 * 2 * sizeof(float), nullptr,
                              GL_STREAM_DRAW); // Orphan
                 glBufferSubData(GL_ARRAY_BUFFER, 0, texture_coords_data.size() * sizeof(float), texture_coords_data.data());
 

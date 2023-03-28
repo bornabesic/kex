@@ -99,7 +99,6 @@ namespace kex {
         // Initialize the positions buffer
         glGenBuffers(1, &sprite_buffers.positions);
         glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.positions);
-        glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr, GL_STREAM_DRAW);
 
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -108,7 +107,6 @@ namespace kex {
         // Initialize the texture coordinates buffer
         glGenBuffers(1, &sprite_buffers.tex_coords);
         glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.tex_coords);
-        glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr, GL_STREAM_DRAW);
 
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
