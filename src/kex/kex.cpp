@@ -28,6 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/kex.h>
 #include <kex/shader.h>
 #include <kex/program.h>
+#include <kex/buffer.h>
 
 namespace kex {
 
@@ -90,9 +91,9 @@ namespace kex {
         glBindVertexArray(sprite_vao);
 
         // Initialize the quad buffer
-        glGenBuffers(1, &sprite_buffers.v_positions);
-        glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.v_positions);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), normalized_positions_data, GL_STATIC_DRAW);
+        StaticArrayBuffer quad_buffer;
+        quad_buffer.replace(normalized_positions_data, 4 * 2 * sizeof(float));
+        quad_buffer.bind();
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);

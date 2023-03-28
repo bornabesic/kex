@@ -66,6 +66,16 @@ namespace kex {
             Impl::current_id = id;
         }
 
+        void unbind() const {
+            if (Impl::current_id != id) return;
+            glBindBuffer(target, 0);
+            Impl::current_id = 0;
+        }
+
+        [[nodiscard]] bool is_bound() const {
+            return Impl::current_id == id;
+        }
+
     private:
         GLenum target = 0;
         GLenum usage = 0;
@@ -100,7 +110,16 @@ namespace kex {
     void Buffer<T, U>::bind() const { impl->bind(); }
 
     template<BufferType T, BufferUsage U>
+    void Buffer<T, U>::unbind() const { impl->unbind(); }
+
+    template<BufferType T, BufferUsage U>
+    bool Buffer<T, U>::is_bound() const { return impl->is_bound(); }
+
+    template<BufferType T, BufferUsage U>
     void Buffer<T, U>::orphan(int size) { impl->orphan(size); }
+
+    template<BufferType T, BufferUsage U>
+    Buffer<T, U>::~Buffer() = default;
 
     // Specializations
     template

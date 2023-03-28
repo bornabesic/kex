@@ -49,7 +49,13 @@ namespace kex {
 
         void bind() const;
 
+        void unbind() const;
+
+        [[nodiscard]] bool is_bound() const;
+
         void orphan(int size = -1);
+
+        ~Buffer();
 
     private:
         class Impl;
