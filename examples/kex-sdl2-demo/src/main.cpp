@@ -37,20 +37,36 @@ int main() {
     }
 
     SDL_Window *window = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
-                                          SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
+                                          SDL_WINDOW_OPENGL);
 
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
 
+    std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
     kex::initialize();
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
-    {
-        kex::SpriteBatch batch;
-        batch.add(sprite);
+
+    glViewport(0, 0, 800, 600);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+
+    SDL_Event event;
+    bool running = true;
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+        }
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        {
+            kex::SpriteBatch batch;
+            batch.add(sprite);
+        }
+        SDL_GL_SwapWindow(window);
     }
 
-    std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
-
     kex::shutdown();
+    SDL_Quit();
     return 0;
 }

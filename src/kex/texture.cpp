@@ -47,6 +47,7 @@ namespace kex {
 
             // Generate an OpenGL texture
             glGenTextures(1, &id);
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, id);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -89,6 +90,7 @@ namespace kex {
     unsigned int Texture::get_id() const { return impl->id; }
 
     void Texture::bind(unsigned int id) {
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
     }
 

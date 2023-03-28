@@ -20,6 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    unsigned int max_sprite_instances = 1024;
+
     class Sprite::Impl {
     public:
         explicit Impl(const Texture &texture) :

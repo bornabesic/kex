@@ -20,6 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define KEX_KEX_H
 
 namespace kex {
+
+    // TODO Remove this
+    struct SpriteBuffers {
+        unsigned int base_positions = 0;
+        unsigned int positions = 0;
+        unsigned int tex_coords = 0;
+    };
+
+    extern SpriteBuffers sprite_buffers;
+
     void initialize();
     void shutdown();
 }

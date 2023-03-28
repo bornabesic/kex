@@ -25,6 +25,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    extern unsigned int max_sprite_instances;
+
     class Sprite {
     public:
         explicit Sprite(const Texture &texture);

@@ -18,7 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <unordered_map>
 #include <kex/spritebatch.h>
+#include <kex/sprite.h>
 #include <kex/shader.h>
+#include <kex/kex.h>
 #include <vector>
 
 namespace kex {
@@ -36,11 +38,23 @@ namespace kex {
             for (const auto &[texture_id, sprites]: groups) {
                 const auto &texture = sprites[0]->get_texture();
 
-                std::vector<float> texture_coordinates_data;
-                texture_coordinates_data.reserve(sprites.size() * 4 * 2);
+                std::vector<float> positions_data;
+                std::vector<float> texture_coords_data;
+                positions_data.reserve(sprites.size() * 4 * 2);
+                texture_coords_data.reserve(sprites.size() * 4 * 2);
                 for (const auto *sprite: sprites) {
-                    texture_coordinates_data.insert(
-                            texture_coordinates_data.end(),
+                    const auto region = sprite->get_texture_region();
+                    positions_data.insert(
+                            positions_data.end(),
+                            {
+                                    static_cast<float>(region.x), static_cast<float>(region.y + region.h),
+                                    static_cast<float>(region.x + region.w), static_cast<float>(region.y + region.h),
+                                    static_cast<float>(region.x), static_cast<float>(region.y),
+                                    static_cast<float>(region.x + region.w), static_cast<float>(region.y)
+                            }
+                    );
+                    texture_coords_data.insert(
+                            texture_coords_data.end(),
                             {
                                     sprite->get_u_min(), sprite->get_v_min(),
                                     sprite->get_u_max(), sprite->get_v_min(),
@@ -50,8 +64,21 @@ namespace kex {
                     );
                 }
 
+                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.positions);
+                glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr,
+                             GL_STREAM_DRAW); // Orphan
+                glBufferSubData(GL_ARRAY_BUFFER, 0, positions_data.size() * sizeof(float), positions_data.data());
+
+                glBindBuffer(GL_ARRAY_BUFFER, sprite_buffers.tex_coords);
+                glBufferData(GL_ARRAY_BUFFER, max_sprite_instances * 4 * 2 * sizeof(float), nullptr,
+                             GL_STREAM_DRAW); // Orphan
+                glBufferSubData(GL_ARRAY_BUFFER, 0, texture_coords_data.size() * sizeof(float), texture_coords_data.data());
+
                 texture.bind();
-                // TODO Draw
+                glDrawArraysInstanced(
+                        GL_TRIANGLE_STRIP,
+                        0, 4, sprites.size() // NOLINT(cppcoreguidelines-narrowing-conversions)
+                );
             }
         }
 

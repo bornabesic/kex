@@ -35,6 +35,10 @@ namespace kex {
             glLinkProgram(id);
         }
 
+        int get_uniform_location(const char *name) const {
+            return glGetUniformLocation(id, name);
+        }
+
         void use() const {
             glUseProgram(id);
         }
@@ -51,6 +55,8 @@ namespace kex {
             std::make_unique<Impl>(vertex_shader, fragment_shader)) {}
 
     void Program::use() const { impl->use(); }
+
+    int Program::get_uniform_location(const char *name) const { return impl->get_uniform_location(name); }
 
     Program::~Program() = default;
 

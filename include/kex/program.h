@@ -28,6 +28,8 @@ namespace kex {
     public:
         Program(const VertexShader &vertex_shader, const FragmentShader &fragment_shader);
 
+        int get_uniform_location(const char *name) const;
+
         void use() const;
 
         ~Program();

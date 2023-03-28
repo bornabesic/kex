@@ -18,9 +18,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <kex/shader.h>
 
+#include <iostream>
+#include <cstdlib>
+
 #ifdef KEX_USE_GLEW
 #include <GL/glew.h>
 #endif
+
+void panic_on_error(GLuint shader) {
+    GLint is_shader_compiled;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &is_shader_compiled);
+    if (is_shader_compiled != GL_TRUE) {
+        GLsizei log_length = 0;
+        GLchar message[1024];
+        glGetShaderInfoLog(shader, 1024, &log_length, message);
+        std::cout << std::string(message, log_length) << '\n';
+        std::exit(1);
+    }
+}
 
 namespace kex {
 
@@ -39,6 +54,7 @@ namespace kex {
             id = glCreateShader(type_gl);
             glShaderSource(id, 1, &source_ptr, nullptr);
             glCompileShader(id);
+            panic_on_error(id);
         }
 
         ~Impl() {
