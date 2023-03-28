@@ -85,6 +85,10 @@ namespace kex {
             return BufferState<T>::bound_id == id;
         }
 
+        ~Impl() {
+            glDeleteBuffers(1, &id);
+        }
+
     private:
         GLenum target = 0;
         GLenum usage = 0;
