@@ -53,20 +53,31 @@ int main() {
     glViewport(0, 0, 800, 600);
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
+    constexpr bool vsync = true;
+    SDL_GL_SetSwapInterval(vsync);
+
     SDL_Event event;
     bool running = true;
     constexpr float amplitude = 10.f;
+    constexpr float pi = 3.14f;
     float step = 0.f;
+    Uint64 previous_ticks = SDL_GetTicks64();
     while (running) {
+        const Uint64 ticks = SDL_GetTicks64();
+        const float delta = (ticks - previous_ticks) / 1000.f;
+        const float fps = 1 / delta;
+        std::cout << "FPS: " << fps << '\n';
+        previous_ticks = ticks;
+
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
             }
         }
 
-        step += .2f;
-        sprite.set_x(SDL_sinf(step) * amplitude);
-        sprite.set_y(SDL_sinf(step) * amplitude);
+        step += delta;
+        sprite.set_x(SDL_sinf(step * pi * 2) * amplitude);
+        sprite.set_y(SDL_sinf(step * pi * 2) * amplitude);
 
         glClear(GL_COLOR_BUFFER_BIT);
         {
@@ -74,6 +85,7 @@ int main() {
             batch.add(sprite);
         }
         SDL_GL_SwapWindow(window);
+
     }
 
     kex::shutdown();
