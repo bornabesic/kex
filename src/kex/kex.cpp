@@ -112,7 +112,7 @@ namespace kex {
 
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glVertexAttribDivisor(2, 1); // One per sprite
+        // TODO glVertexAttribDivisor(2, 1); // One per sprite
 
         // Initialize shaders
         vertex_shader = std::make_unique<VertexShader>(vertex_shader_source);

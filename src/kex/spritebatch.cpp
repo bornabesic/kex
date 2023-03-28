@@ -58,8 +58,8 @@ namespace kex {
                             {
                                     sprite->get_u_min(), sprite->get_v_min(),
                                     sprite->get_u_max(), sprite->get_v_min(),
-                                    sprite->get_u_max(), sprite->get_v_max(),
                                     sprite->get_u_min(), sprite->get_v_max(),
+                                    sprite->get_u_max(), sprite->get_v_max(),
                             }
                     );
                 }
