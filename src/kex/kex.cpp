@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/shader.h>
 #include <kex/program.h>
 #include <kex/buffer.h>
+#include <kex/vertexarray.h>
 
 namespace kex {
 
@@ -40,6 +41,7 @@ namespace kex {
     };
 
     std::unique_ptr<SpriteBuffers> sprite_buffers;
+    std::unique_ptr<VertexArray> vao;
     unsigned int sprite_vao = 0;
 
     static constexpr auto vertex_shader_source = R"(
@@ -92,37 +94,17 @@ namespace kex {
         sprite_buffers = std::make_unique<SpriteBuffers>();
 
         // Generate VAO for sprites
-        glGenVertexArrays(1, &sprite_vao);
-        glBindVertexArray(sprite_vao);
+        vao = std::make_unique<VertexArray>();
+        vao->bind();
 
         // Initialize the quad buffer
         sprite_buffers->v_positions.replace(normalized_positions_data, 4 * 2 * sizeof(float));
-        sprite_buffers->v_positions.bind();
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glVertexAttribDivisor(0, 0); // Same for all sprites
-
-        // Initialize the positions buffer
-        sprite_buffers->s_positions.bind();
-
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glVertexAttribDivisor(1, 1); // One per sprite
-
-        // Initialize the texture coordinates buffer
-        sprite_buffers->v_tex_coords.bind();
-
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-        // TODO glVertexAttribDivisor(2, 1); // One per sprite
-
-        // Initialize the sizes buffer
-        sprite_buffers->s_sizes.bind();
-
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glVertexAttribDivisor(3, 1); // One per sprite
+        // Initialize vertex attributes
+        vao->add_attribute<VertexAttr::VEC2, 0>(sprite_buffers->v_positions);
+        vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_positions);
+        vao->add_attribute<VertexAttr::VEC2>(sprite_buffers->v_tex_coords);
+        vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_sizes);
 
         // Initialize shaders
         vertex_shader = std::make_unique<VertexShader>(vertex_shader_source);
