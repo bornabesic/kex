@@ -101,7 +101,7 @@ namespace kex {
         sprite_buffers->v_positions.replace(normalized_positions_data, 4 * 2 * sizeof(float));
 
         // Initialize vertex attributes
-        vao->add_attribute<VertexAttr::VEC2, 0>(sprite_buffers->v_positions);
+        vao->add_attribute<VertexAttr::VEC2>(sprite_buffers->v_positions);
         vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_positions);
         vao->add_attribute<VertexAttr::VEC2>(sprite_buffers->v_tex_coords);
         vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_sizes);

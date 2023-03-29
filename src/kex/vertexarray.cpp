@@ -57,9 +57,7 @@ namespace kex {
 
             glEnableVertexAttribArray(current_index);
             glVertexAttribPointer(current_index, size, type, normalized, 0, nullptr);
-            if constexpr (Div >= 0) {
-                glVertexAttribDivisor(current_index, Div); // One per sprite
-            }
+            glVertexAttribDivisor(current_index, Div);
             ++current_index;
         }
 
@@ -88,10 +86,10 @@ namespace kex {
     template void VertexArray::add_attribute<VertexAttr::VEC2, 0, false, BufferUsage::STATIC>(
             const ArrayBuffer<BufferUsage::STATIC> &array_buffer);
 
-    template void VertexArray::add_attribute<VertexAttr::VEC2, 1, false, BufferUsage::STREAM>(
+    template void VertexArray::add_attribute<VertexAttr::VEC2, 0, false, BufferUsage::STREAM>(
             const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
 
-    template void VertexArray::add_attribute<VertexAttr::VEC2, -1, false, BufferUsage::STREAM>(
+    template void VertexArray::add_attribute<VertexAttr::VEC2, 1, false, BufferUsage::STREAM>(
             const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
 
 }

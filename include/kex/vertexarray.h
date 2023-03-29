@@ -35,7 +35,7 @@ namespace kex {
 
         void bind() const;
 
-        template<VertexAttr Attr, int Div = -1, bool Norm = false, BufferUsage Usg>
+        template<VertexAttr Attr, int Div = 0, bool Norm = false, BufferUsage Usg>
         void add_attribute(const ArrayBuffer<Usg> &array_buffer);
 
         ~VertexArray();
