@@ -105,6 +105,9 @@ namespace kex {
     Buffer<T, U>::Buffer(int size) : impl(std::make_unique<Impl>(size)) {}
 
     template<BufferType T, BufferUsage U>
+    Buffer<T, U>::Buffer(Buffer<T, U> &&buffer) noexcept = default;
+
+    template<BufferType T, BufferUsage U>
     constexpr BufferType Buffer<T, U>::get_type() const { return T; }
 
     template<BufferType T, BufferUsage U>

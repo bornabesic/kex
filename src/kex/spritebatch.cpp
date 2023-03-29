@@ -21,17 +21,52 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/sprite.h>
 #include <kex/shader.h>
 #include <kex/kex.h>
+#include <kex/vertexarray.h>
+
 #include <vector>
 
 #ifdef KEX_USE_GLEW
+
 #include <GL/glew.h>
+#include <iostream>
+
 #endif
 
 namespace kex {
 
+    static constexpr float normalized_positions_data[] = {
+            -1.f, -1.f,
+            1.f, -1.f,
+            -1.f, 1.f,
+            1.f, 1.f,
+    };
+
+    struct SpriteBatchCtx {
+        VertexArray vao;
+        StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
+        StreamArrayBuffer v_tex_coords;
+        StreamArrayBuffer s_positions;
+        StreamArrayBuffer s_sizes;
+    };
+
     class SpriteBatch::Impl {
     public:
-        Impl() = default;
+        Impl() {
+            ctx_index = last_used_ctx_index + 1;
+            if (last_used_ctx_index == ctxs.size() - 1) {
+                auto &ctx = Impl::ctxs.emplace_back();
+
+                // Initialize the quad buffer
+                ctx.v_positions.replace(normalized_positions_data, 4 * 2 * sizeof(float));
+
+                // Initialize vertex attributes
+                ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_positions);
+                ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords);
+                ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_positions);
+                ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_sizes);
+            }
+            ++last_used_ctx_index;
+        };
 
         void add(const Sprite &sprite) {
             const auto &texture = sprite.get_texture();
@@ -79,28 +114,39 @@ namespace kex {
                     );
                 }
 
-                sprite_buffers->s_positions.orphan(sprites.size() * 2 * sizeof(float));
-                sprite_buffers->s_positions.update(s_positions.data(), s_positions.size() * sizeof(float));
+                auto &ctx = Impl::ctxs[ctx_index];
+                ctx.v_tex_coords.orphan(sprites.size() * 4 * 2 * sizeof(float));
+                ctx.v_tex_coords.update(v_tex_coords.data(), v_tex_coords.size() * sizeof(float));
 
-                sprite_buffers->s_sizes.orphan(sprites.size() * 2 * sizeof(float));
-                sprite_buffers->s_sizes.update(s_sizes.data(), s_sizes.size() * sizeof(float));
+                ctx.s_positions.orphan(sprites.size() * 2 * sizeof(float));
+                ctx.s_positions.update(s_positions.data(), s_positions.size() * sizeof(float));
 
-                sprite_buffers->v_tex_coords.orphan(sprites.size() * 4 * 2 * sizeof(float));
-                sprite_buffers->v_tex_coords.update(v_tex_coords.data(), v_tex_coords.size() * sizeof(float));
+                ctx.s_sizes.orphan(sprites.size() * 2 * sizeof(float));
+                ctx.s_sizes.update(s_sizes.data(), s_sizes.size() * sizeof(float));
 
+                ctx.vao.bind();
                 texture.bind();
                 glDrawArraysInstanced(
                         GL_TRIANGLE_STRIP,
                         0, 4, sprites.size() // NOLINT(cppcoreguidelines-narrowing-conversions)
                 );
+
+                --last_used_ctx_index;
             }
         }
 
     private:
         std::unordered_map<unsigned int, std::vector<const Sprite *>> groups;
+        int ctx_index = -1;
+
+        static std::vector<SpriteBatchCtx> ctxs;
+        static int last_used_ctx_index;
 
         friend SpriteBatch;
     };
+
+    std::vector<SpriteBatchCtx> SpriteBatch::Impl::ctxs;
+    int SpriteBatch::Impl::last_used_ctx_index = -1;
 
     SpriteBatch::SpriteBatch() : impl(std::make_unique<Impl>()) {}
 

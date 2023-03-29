@@ -49,6 +49,7 @@ int main() {
     kex::initialize();
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
+    kex::Sprite sprite2(texture);
 
     glViewport(0, 0, 800, 600);
     glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -58,7 +59,7 @@ int main() {
 
     SDL_Event event;
     bool running = true;
-    constexpr float amplitude = 10.f;
+    constexpr float amplitude = 100.f;
     constexpr float pi = 3.14f;
     float step = 0.f;
     Uint64 previous_ticks = SDL_GetTicks64();
@@ -77,12 +78,17 @@ int main() {
 
         step += delta;
         sprite.set_position_x(SDL_sinf(step * pi * 2) * amplitude);
-        sprite.set_position_y(SDL_sinf(step * pi * 2) * amplitude);
+        sprite.set_position_y(SDL_cosf(step * pi * 2) * amplitude);
+
+        sprite2.set_position_x(SDL_cosf(step * pi * 2 + pi) * amplitude);
+        sprite2.set_position_y(SDL_sinf(step * pi * 2 + pi) * amplitude);
 
         glClear(GL_COLOR_BUFFER_BIT);
         {
             kex::SpriteBatch batch;
+            kex::SpriteBatch batch2;
             batch.add(sprite);
+            batch2.add(sprite2);
         }
         SDL_GL_SwapWindow(window);
 

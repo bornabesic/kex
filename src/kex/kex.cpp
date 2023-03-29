@@ -33,23 +33,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
-    static constexpr float normalized_positions_data[] = {
-            -1.f, -1.f,
-            1.f, -1.f,
-            -1.f, 1.f,
-            1.f, 1.f,
-    };
-
-    std::unique_ptr<SpriteBuffers> sprite_buffers;
     std::unique_ptr<VertexArray> vao;
-    unsigned int sprite_vao = 0;
 
     static constexpr auto vertex_shader_source = R"(
         #version 300 es
 
         layout (location = 0) in highp vec2 base_position_in;
-        layout (location = 1) in highp vec2 position_in;
-        layout (location = 2) in highp vec2 tex_coords_in;
+        layout (location = 1) in highp vec2 tex_coords_in;
+        layout (location = 2) in highp vec2 position_in;
         layout (location = 3) in highp vec2 size_in;
 
         out highp vec2 tex_coords;
@@ -90,21 +81,6 @@ namespace kex {
 
 //        glEnable(GL_BLEND);
 //        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        sprite_buffers = std::make_unique<SpriteBuffers>();
-
-        // Generate VAO for sprites
-        vao = std::make_unique<VertexArray>();
-        vao->bind();
-
-        // Initialize the quad buffer
-        sprite_buffers->v_positions.replace(normalized_positions_data, 4 * 2 * sizeof(float));
-
-        // Initialize vertex attributes
-        vao->add_attribute<VertexAttr::VEC2>(sprite_buffers->v_positions);
-        vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_positions);
-        vao->add_attribute<VertexAttr::VEC2>(sprite_buffers->v_tex_coords);
-        vao->add_attribute<VertexAttr::VEC2, 1>(sprite_buffers->s_sizes);
 
         // Initialize shaders
         vertex_shader = std::make_unique<VertexShader>(vertex_shader_source);

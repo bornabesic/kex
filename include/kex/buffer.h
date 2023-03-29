@@ -39,6 +39,8 @@ namespace kex {
 
         explicit Buffer();
 
+        Buffer(Buffer &&buffer) noexcept;
+
         [[nodiscard]] constexpr BufferType get_type() const;
 
         [[nodiscard]] constexpr BufferUsage get_usage() const;

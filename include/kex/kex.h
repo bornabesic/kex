@@ -23,16 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
-    // TODO Remove this
-    struct SpriteBuffers {
-        StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
-        StreamArrayBuffer v_tex_coords;
-        StreamArrayBuffer s_positions;
-        StreamArrayBuffer s_sizes;
-    };
-
-    extern std::unique_ptr<SpriteBuffers> sprite_buffers;
-
     void initialize();
     void shutdown();
 }

@@ -33,6 +33,10 @@ namespace kex {
     public:
         VertexArray();
 
+        VertexArray(VertexArray &&vertex_array) noexcept;
+
+        [[nodiscard]] unsigned int get_id() const;
+
         void bind() const;
 
         template<VertexAttr Attr, int Div = 0, bool Norm = false, BufferUsage Usg>

@@ -36,6 +36,7 @@ namespace kex {
 
         template<VertexAttr Attr, BufferUsage Usg, int Div, bool Norm>
         void add_attribute(const ArrayBuffer<Usg> &array_buffer) {
+            this->bind();
             array_buffer.bind();
 
             GLint size;
@@ -68,11 +69,17 @@ namespace kex {
     private:
         GLuint id = 0;
         GLuint current_index = 0;
+
+        friend VertexArray;
     };
 
     VertexArray::VertexArray() : impl(std::make_unique<Impl>()) {}
 
     void VertexArray::bind() const { impl->bind(); }
+
+    unsigned int VertexArray::get_id() const { return impl->id; }
+
+    VertexArray::VertexArray(VertexArray &&vertex_array) noexcept = default;
 
     template<VertexAttr Attr, int Div, bool Norm, BufferUsage Usg>
     void
