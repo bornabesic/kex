@@ -61,6 +61,8 @@ namespace kex {
 
         [[nodiscard]] float get_color_alpha() const;
 
+        [[nodiscard]] std::array<float, 3 * 3> get_transform() const;
+
         [[nodiscard]] float get_u_min() const;
 
         [[nodiscard]] float get_u_max() const;

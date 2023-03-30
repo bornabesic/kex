@@ -36,16 +36,17 @@ namespace kex {
 
         layout (location = 0) in highp vec2 base_position_in;
         layout (location = 1) in highp vec2 tex_coords_in;
-        layout (location = 2) in highp vec2 position_in;
-        layout (location = 3) in highp vec2 size_in;
-        layout (location = 4) in highp vec4 color_in;
+        layout (location = 2) in highp mat3 transform_in;
+        // layout (location = 3)
+        // layout (location = 4)
+        layout (location = 5) in highp vec4 color_in;
 
         out highp vec2 tex_coords;
         out highp vec4 color;
 
         void main() {
-            highp vec2 position = (base_position_in * size_in + position_in) / vec2(800, 600);
-            gl_Position = vec4(position, 0, 1);
+            highp vec3 position = transform_in * vec3(base_position_in, 1) / vec3(800, 600, 1);
+            gl_Position = vec4(position.xy, 0, 1);
             tex_coords = tex_coords_in;
             color = color_in;
         }
@@ -81,16 +82,14 @@ namespace kex {
         VertexArray vao;
         StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
         StreamArrayBuffer v_tex_coords;
-        StreamArrayBuffer s_positions;
-        StreamArrayBuffer s_sizes;
+        StreamArrayBuffer s_transforms;
         StreamArrayBuffer s_colors;
     };
 
     struct SpriteBatchGroupData {
         unsigned int texture_id = 0;
         std::vector<float> v_tex_coords;
-        std::vector<float> s_positions;
-        std::vector<float> s_sizes;
+        std::vector<float> s_transforms;
         std::vector<float> s_colors;
         int instance_count = 0;
     };
@@ -108,8 +107,7 @@ namespace kex {
                 // Initialize vertex attributes
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_positions);
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords);
-                ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_positions);
-                ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_sizes);
+                ctx.vao.add_attribute<VertexAttr::MAT3, 1>(ctx.s_transforms);
                 ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_colors);
             }
             ++last_used_ctx_index;
@@ -131,19 +129,10 @@ namespace kex {
             const auto &texture = sprite.get_texture();
             auto &group_data = groups[texture.get_id()];
             group_data.texture_id = texture.get_id();
-            group_data.s_positions.insert(
-                    group_data.s_positions.end(),
-                    {
-                            static_cast<float>(sprite.get_position_x()),
-                            static_cast<float>(sprite.get_position_y())
-                    }
-            );
-            group_data.s_sizes.insert(
-                    group_data.s_sizes.end(),
-                    {
-                            static_cast<float>(sprite.get_width()),
-                            static_cast<float>(sprite.get_height()),
-                    }
+            const auto transform = sprite.get_transform();
+            group_data.s_transforms.insert(
+                    group_data.s_transforms.end(),
+                    transform.begin(), transform.end()
             );
             group_data.v_tex_coords.insert(
                     group_data.v_tex_coords.end(),
@@ -174,11 +163,8 @@ namespace kex {
                 ctx.v_tex_coords.orphan(data.instance_count * 4 * 2 * sizeof(float));
                 ctx.v_tex_coords.update(data.v_tex_coords.data(), data.v_tex_coords.size() * sizeof(float));
 
-                ctx.s_positions.orphan(data.instance_count * 2 * sizeof(float));
-                ctx.s_positions.update(data.s_positions.data(), data.s_positions.size() * sizeof(float));
-
-                ctx.s_sizes.orphan(data.instance_count * 2 * sizeof(float));
-                ctx.s_sizes.update(data.s_sizes.data(), data.s_sizes.size() * sizeof(float));
+                ctx.s_transforms.orphan(data.instance_count * 3 * 3 * sizeof(float));
+                ctx.s_transforms.update(data.s_transforms.data(), data.s_transforms.size() * sizeof(float));
 
                 ctx.s_colors.orphan(data.instance_count * 4 * sizeof(float));
                 ctx.s_colors.update(data.s_colors.data(), data.s_colors.size() * sizeof(float));

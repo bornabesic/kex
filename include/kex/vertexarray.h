@@ -27,6 +27,7 @@ namespace kex {
     enum VertexAttr {
         VEC2,
         VEC4,
+        MAT3,
     };
 
     class VertexArray {

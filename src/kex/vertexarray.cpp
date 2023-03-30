@@ -34,20 +34,31 @@ namespace kex {
             glBindVertexArray(id);
         }
 
-        template<VertexAttr Attr, BufferUsage Usg, int Div, bool Norm>
+        template<VertexAttr Attr, int Div, bool Norm, BufferUsage Usg>
         void add_attribute(const ArrayBuffer<Usg> &array_buffer) {
             this->bind();
             array_buffer.bind();
 
+            int count;
             GLint size;
             GLenum type;
             GLboolean normalized;
+            GLsizei stride = 0;
+            int item_offset = 0;
             if constexpr (Attr == VertexAttr::VEC2) {
+                count = 1;
                 size = 2;
                 type = GL_FLOAT;
             } else if constexpr (Attr == VertexAttr::VEC4) {
+                count = 1;
                 size = 4;
                 type = GL_FLOAT;
+            } else if constexpr (Attr == VertexAttr::MAT3) {
+                count = 3;
+                size = 3;
+                type = GL_FLOAT;
+                stride = 3 * 3 * sizeof(float);
+                item_offset = 3 * sizeof(float);
             }
 
             if constexpr (Norm) {
@@ -56,10 +67,16 @@ namespace kex {
                 normalized = GL_FALSE;
             }
 
-            glEnableVertexAttribArray(current_index);
-            glVertexAttribPointer(current_index, size, type, normalized, 0, nullptr);
-            glVertexAttribDivisor(current_index, Div);
-            ++current_index;
+            int current_offset = 0;
+            while (count-- > 0) {
+                glEnableVertexAttribArray(current_index);
+                glVertexAttribPointer(current_index, size, type, normalized, stride,
+                                      reinterpret_cast<const void *>(current_offset));
+                glVertexAttribDivisor(current_index, Div);
+                ++current_index;
+                current_offset += item_offset;
+            }
+
         }
 
         ~Impl() {
@@ -84,7 +101,7 @@ namespace kex {
     template<VertexAttr Attr, int Div, bool Norm, BufferUsage Usg>
     void
     VertexArray::add_attribute(const ArrayBuffer<Usg> &array_buffer) {
-        impl->add_attribute<Attr, Usg, Div, Norm>(array_buffer);
+        impl->add_attribute<Attr, Div, Norm>(array_buffer);
     }
 
     VertexArray::~VertexArray() = default;
@@ -102,4 +119,6 @@ namespace kex {
     template void VertexArray::add_attribute<VertexAttr::VEC4, 1, false, BufferUsage::STREAM>(
             const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
 
+    template void VertexArray::add_attribute<VertexAttr::MAT3, 1, false, BufferUsage::STREAM>(
+            const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
 }

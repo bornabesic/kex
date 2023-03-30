@@ -42,6 +42,15 @@ namespace kex {
             a = alpha;
         }
 
+        [[nodiscard]] std::array<float, 3 * 3> get_transform() const {
+            // NOTE Column-major!
+            return {
+                    w, 0, 0,
+                    0, h, 0,
+                    x, y, 1
+            };
+        }
+
     private:
         const Texture &texture;
         const RectangleDef texture_region;
@@ -113,6 +122,8 @@ namespace kex {
         impl->x = x;
         impl->y = y;
     }
+
+    std::array<float, 3 * 3> Sprite::get_transform() const { return impl->get_transform(); }
 
     Sprite::~Sprite() = default;
 
