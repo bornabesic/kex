@@ -19,9 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/program.h>
 
 #ifdef KEX_USE_GLEW
-
 #include <GL/glew.h>
-
 #endif
 
 namespace kex {

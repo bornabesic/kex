@@ -94,7 +94,6 @@ int main() {
 
     }
 
-    kex::shutdown();
     SDL_Quit();
     return 0;
 }
