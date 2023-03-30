@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <kex/sprite.h>
+#include <cmath>
 
 namespace kex {
 
@@ -44,10 +45,28 @@ namespace kex {
 
         [[nodiscard]] std::array<float, 3 * 3> get_transform() const {
             // NOTE Column-major!
+            // Vertex is a column vector multiplied by the transform from the left
+
+            // 1. Rotation
+            // {
+            //     cos, sin, 0,
+            //     -sin, cos 0,
+            //     0, 0, 1
+            // };
+
+            // 2. Translation
+            // {
+            //     w, shear_y, 0,
+            //     shear_x, h, 0,
+            //     x, y, 1
+            // };
+
+            const auto cos = std::cos(rotation);
+            const auto sin = std::sin(rotation);
             return {
-                    w, shear_y, 0,
-                    shear_x, h, 0,
-                    x, y, 1
+                    w * cos + shear_x * sin, shear_y * cos + h * sin, 0,
+                    -w * sin + shear_x * cos, -shear_y * sin + h * cos, 0,
+                    x, y, 1,
             };
         }
 
@@ -58,6 +77,7 @@ namespace kex {
         float x = 0, y = 0, w, h;
         float r = 1.f, g = 1.f, b = 1.f, a = 0.f;
         float shear_x = 0.f, shear_y = 0.f;
+        float rotation = 0.f;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
             return static_cast<float>(region.x) / texture.get_width();
@@ -137,6 +157,14 @@ namespace kex {
     void Sprite::set_shear_xy(float shear_x, float shear_y) {
         impl->shear_x = shear_x;
         impl->shear_y = shear_y;
+    }
+
+    void Sprite::set_rotation(float rotation) {
+        impl->rotation = rotation;
+    }
+
+    float Sprite::get_rotation() const {
+        return impl->rotation;
     }
 
     Sprite::~Sprite() = default;
