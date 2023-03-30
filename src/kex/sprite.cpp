@@ -45,8 +45,8 @@ namespace kex {
         [[nodiscard]] std::array<float, 3 * 3> get_transform() const {
             // NOTE Column-major!
             return {
-                    w, 0, 0,
-                    0, h, 0,
+                    w, shear_y, 0,
+                    shear_x, h, 0,
                     x, y, 1
             };
         }
@@ -57,6 +57,7 @@ namespace kex {
         const float u_min, u_max, v_min, v_max;
         float x = 0, y = 0, w, h;
         float r = 1.f, g = 1.f, b = 1.f, a = 0.f;
+        float shear_x = 0.f, shear_y = 0.f;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
             return static_cast<float>(region.x) / texture.get_width();
@@ -124,6 +125,19 @@ namespace kex {
     }
 
     std::array<float, 3 * 3> Sprite::get_transform() const { return impl->get_transform(); }
+
+    float Sprite::get_shear_x() const { return impl->shear_x; }
+
+    float Sprite::get_shear_y() const { return impl->shear_y; }
+
+    void Sprite::set_shear_x(float shear_x) { impl->shear_x = shear_x; }
+
+    void Sprite::set_shear_y(float shear_y) { impl->shear_y = shear_y; }
+
+    void Sprite::set_shear_xy(float shear_x, float shear_y) {
+        impl->shear_x = shear_x;
+        impl->shear_y = shear_y;
+    }
 
     Sprite::~Sprite() = default;
 

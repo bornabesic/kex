@@ -80,6 +80,7 @@ int main() {
         step += delta;
         sprite.set_position_x(SDL_sinf(step * pi * 2) * amplitude);
         sprite.set_position_y(SDL_cosf(step * pi * 2) * amplitude);
+        sprite.set_shear_x(SDL_sinf(step * pi * 2) * amplitude);
 
         sprite2.set_position_x(SDL_cosf(step * pi * 2 + pi) * amplitude);
         sprite2.set_position_y(SDL_sinf(step * pi * 2 + pi) * amplitude);

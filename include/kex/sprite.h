@@ -61,6 +61,16 @@ namespace kex {
 
         [[nodiscard]] float get_color_alpha() const;
 
+        [[nodiscard]] float get_shear_x() const;
+
+        [[nodiscard]] float get_shear_y() const;
+
+        void set_shear_x(float shear_x);
+
+        void set_shear_y(float shear_y);
+
+        void set_shear_xy(float shear_x, float shear_y);
+
         [[nodiscard]] std::array<float, 3 * 3> get_transform() const;
 
         [[nodiscard]] float get_u_min() const;
