@@ -65,6 +65,16 @@ namespace kex {
 
         [[nodiscard]] float get_color_alpha() const;
 
+        [[nodiscard]] float get_scale_x() const;
+
+        [[nodiscard]] float get_scale_y() const;
+
+        void set_scale_x(float scale_x);
+
+        void set_scale_y(float scale_y);
+
+        void set_scale_xy(float scale_x, float scale_y);
+
         [[nodiscard]] float get_shear_x() const;
 
         [[nodiscard]] float get_shear_y() const;

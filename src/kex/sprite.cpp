@@ -63,9 +63,11 @@ namespace kex {
 
             const auto cos = std::cos(rotation);
             const auto sin = std::sin(rotation);
+            const auto w_scaled = w * scale_x;
+            const auto h_scaled = h * scale_y;
             return {
-                    w * cos + shear_x * sin, shear_y * cos + h * sin, 0,
-                    -w * sin + shear_x * cos, -shear_y * sin + h * cos, 0,
+                    w_scaled * cos + shear_x * sin, shear_y * cos + h_scaled * sin, 0,
+                    -w_scaled * sin + shear_x * cos, -shear_y * sin + h_scaled * cos, 0,
                     x, y, 1,
             };
         }
@@ -74,8 +76,10 @@ namespace kex {
         const Texture &texture;
         const RectangleDef texture_region;
         const float u_min, u_max, v_min, v_max;
-        float x = 0, y = 0, w, h;
+        const float w, h;
+        float x = 0, y = 0;
         float r = 1.f, g = 1.f, b = 1.f, a = 0.f;
+        float scale_x = 1.f, scale_y = 1.f;
         float shear_x = 0.f, shear_y = 0.f;
         float rotation = 0.f;
 
@@ -159,12 +163,21 @@ namespace kex {
         impl->shear_y = shear_y;
     }
 
-    void Sprite::set_rotation(float rotation) {
-        impl->rotation = rotation;
-    }
+    void Sprite::set_rotation(float rotation) { impl->rotation = rotation; }
 
-    float Sprite::get_rotation() const {
-        return impl->rotation;
+    float Sprite::get_rotation() const { return impl->rotation; }
+
+    float Sprite::get_scale_x() const { return impl->scale_x; }
+
+    float Sprite::get_scale_y() const { return impl->scale_y; }
+
+    void Sprite::set_scale_x(float scale_x) { impl->scale_x = scale_x; }
+
+    void Sprite::set_scale_y(float scale_y) { impl->scale_y = scale_y; }
+
+    void Sprite::set_scale_xy(float scale_x, float scale_y) {
+        impl->scale_x = scale_x;
+        impl->scale_y = scale_y;
     }
 
     Sprite::~Sprite() = default;
