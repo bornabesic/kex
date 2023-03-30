@@ -49,6 +49,8 @@ namespace kex {
 
         void set_position_y(float y);
 
+        void set_position_xy(float x, float y);
+
         void set_color(float red, float green, float blue, float alpha = 1.f);
 
         [[nodiscard]] float get_color_red() const;

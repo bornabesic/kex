@@ -109,6 +109,11 @@ namespace kex {
 
     float Sprite::get_color_alpha() const { return impl->a; }
 
+    void Sprite::set_position_xy(float x, float y) {
+        impl->x = x;
+        impl->y = y;
+    }
+
     Sprite::~Sprite() = default;
 
 }
