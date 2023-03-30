@@ -19,17 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <iostream>
 
-#ifdef KEX_USE_GLEW
-
-#include "GL/glew.h"
-
-#endif
-
 #include <kex/kex.h>
-#include <kex/shader.h>
-#include <kex/program.h>
-#include <kex/buffer.h>
-#include <kex/vertexarray.h>
+
+#ifdef KEX_USE_GLEW
+#include "GL/glew.h"
+#endif
 
 namespace kex {
 
@@ -42,9 +36,8 @@ namespace kex {
         }
 #endif
 
-        // TODO Blending
-        // glEnable(GL_BLEND);
-        // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
         std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';

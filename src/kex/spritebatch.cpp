@@ -38,13 +38,16 @@ namespace kex {
         layout (location = 1) in highp vec2 tex_coords_in;
         layout (location = 2) in highp vec2 position_in;
         layout (location = 3) in highp vec2 size_in;
+        layout (location = 4) in highp vec4 color_in;
 
         out highp vec2 tex_coords;
+        out highp vec4 color;
 
         void main() {
             highp vec2 position = (base_position_in * size_in + position_in) / vec2(800, 600);
             gl_Position = vec4(position, 0, 1);
             tex_coords = tex_coords_in;
+            color = color_in;
         }
     )";
 
@@ -54,11 +57,16 @@ namespace kex {
         uniform sampler2D tex_u;
 
         in highp vec2 tex_coords;
+        in highp vec4 color;
 
         out highp vec4 color_out;
 
         void main() {
-            color_out = texture(tex_u, tex_coords);
+            color_out = mix(
+                texture(tex_u, tex_coords),
+                vec4(color.rgb, 1),
+                color.a
+            );
         }
     )";
 
@@ -75,6 +83,7 @@ namespace kex {
         StreamArrayBuffer v_tex_coords;
         StreamArrayBuffer s_positions;
         StreamArrayBuffer s_sizes;
+        StreamArrayBuffer s_colors;
     };
 
     struct SpriteBatchGroupData {
@@ -82,6 +91,7 @@ namespace kex {
         std::vector<float> v_tex_coords;
         std::vector<float> s_positions;
         std::vector<float> s_sizes;
+        std::vector<float> s_colors;
         int instance_count = 0;
     };
 
@@ -100,6 +110,7 @@ namespace kex {
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords);
                 ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_positions);
                 ctx.vao.add_attribute<VertexAttr::VEC2, 1>(ctx.s_sizes);
+                ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_colors);
             }
             ++last_used_ctx_index;
 
@@ -143,6 +154,16 @@ namespace kex {
                             sprite.get_u_max(), sprite.get_v_max(),
                     }
             );
+            group_data.s_colors.insert(
+                    group_data.s_colors.end(),
+                    {
+                            sprite.get_color_red(),
+                            sprite.get_color_green(),
+                            sprite.get_color_blue(),
+                            sprite.get_color_alpha()
+                    }
+            );
+
             ++group_data.instance_count;
         }
 
@@ -158,6 +179,9 @@ namespace kex {
 
                 ctx.s_sizes.orphan(data.instance_count * 2 * sizeof(float));
                 ctx.s_sizes.update(data.s_sizes.data(), data.s_sizes.size() * sizeof(float));
+
+                ctx.s_colors.orphan(data.instance_count * 4 * sizeof(float));
+                ctx.s_colors.update(data.s_colors.data(), data.s_colors.size() * sizeof(float));
 
                 ctx.vao.bind();
                 Texture::bind(data.texture_id);

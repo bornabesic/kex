@@ -35,11 +35,19 @@ namespace kex {
                 w(rectangle.w),
                 h(rectangle.h) {}
 
+        void set_color(float red, float green, float blue, float alpha) {
+            r = red;
+            g = green;
+            b = blue;
+            a = alpha;
+        }
+
     private:
         const Texture &texture;
         const RectangleDef texture_region;
         const float u_min, u_max, v_min, v_max;
         float x = 0, y = 0, w, h;
+        float r = 1.f, g = 1.f, b = 1.f, a = 0.f;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
             return static_cast<float>(region.x) / texture.get_width();
@@ -88,6 +96,18 @@ namespace kex {
     void Sprite::set_position_x(float x) { impl->x = x; }
 
     void Sprite::set_position_y(float y) { impl->y = y; }
+
+    void Sprite::set_color(float red, float green, float blue, float alpha) {
+        impl->set_color(red, green, blue, alpha);
+    }
+
+    float Sprite::get_color_red() const { return impl->r; }
+
+    float Sprite::get_color_blue() const { return impl->b; }
+
+    float Sprite::get_color_green() const { return impl->g; }
+
+    float Sprite::get_color_alpha() const { return impl->a; }
 
     Sprite::~Sprite() = default;
 

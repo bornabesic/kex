@@ -63,6 +63,7 @@ int main() {
     constexpr float pi = 3.14f;
     float step = 0.f;
     Uint64 previous_ticks = SDL_GetTicks64();
+    sprite.set_color(1.f, 0.f, 1.f, 0.5f);
     while (running) {
         const Uint64 ticks = SDL_GetTicks64();
         const float delta = (ticks - previous_ticks) / 1000.f;

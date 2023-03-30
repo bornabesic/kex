@@ -99,4 +99,7 @@ namespace kex {
     template void VertexArray::add_attribute<VertexAttr::VEC2, 1, false, BufferUsage::STREAM>(
             const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
 
+    template void VertexArray::add_attribute<VertexAttr::VEC4, 1, false, BufferUsage::STREAM>(
+            const ArrayBuffer<BufferUsage::STREAM> &array_buffer);
+
 }
