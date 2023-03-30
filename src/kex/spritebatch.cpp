@@ -77,6 +77,14 @@ namespace kex {
         StreamArrayBuffer s_sizes;
     };
 
+    struct SpriteBatchGroupData {
+        unsigned int texture_id = 0;
+        std::vector<float> v_tex_coords;
+        std::vector<float> s_positions;
+        std::vector<float> s_sizes;
+        int instance_count = 0;
+    };
+
     class SpriteBatch::Impl {
     public:
         Impl() {
@@ -110,65 +118,52 @@ namespace kex {
 
         void add(const Sprite &sprite) {
             const auto &texture = sprite.get_texture();
-            groups[texture.get_id()].push_back(&sprite);
+            auto &group_data = groups[texture.get_id()];
+            group_data.texture_id = texture.get_id();
+            group_data.s_positions.insert(
+                    group_data.s_positions.end(),
+                    {
+                            static_cast<float>(sprite.get_position_x()),
+                            static_cast<float>(sprite.get_position_y())
+                    }
+            );
+            group_data.s_sizes.insert(
+                    group_data.s_sizes.end(),
+                    {
+                            static_cast<float>(sprite.get_width()),
+                            static_cast<float>(sprite.get_height()),
+                    }
+            );
+            group_data.v_tex_coords.insert(
+                    group_data.v_tex_coords.end(),
+                    {
+                            sprite.get_u_min(), sprite.get_v_min(),
+                            sprite.get_u_max(), sprite.get_v_min(),
+                            sprite.get_u_min(), sprite.get_v_max(),
+                            sprite.get_u_max(), sprite.get_v_max(),
+                    }
+            );
+            ++group_data.instance_count;
         }
 
         ~Impl() {
-            std::vector<float> v_tex_coords;
-            std::vector<float> s_positions;
-            std::vector<float> s_sizes;
 
-            for (const auto &[texture_id, sprites]: groups) {
-                const auto &texture = sprites[0]->get_texture();
-
-                v_tex_coords.clear();
-                s_positions.clear();
-                s_sizes.clear();
-
-                v_tex_coords.reserve(sprites.size() * 4 * 2);
-                s_positions.reserve(sprites.size() * 2);
-                s_sizes.reserve(sprites.size() * 2);
-                for (const auto *sprite: sprites) {
-                    s_positions.insert(
-                            s_positions.end(),
-                            {
-                                    static_cast<float>(sprite->get_position_x()),
-                                    static_cast<float>(sprite->get_position_y())
-                            }
-                    );
-                    s_sizes.insert(
-                            s_sizes.end(),
-                            {
-                                    static_cast<float>(sprite->get_width()),
-                                    static_cast<float>(sprite->get_height()),
-                            }
-                    );
-                    v_tex_coords.insert(
-                            v_tex_coords.end(),
-                            {
-                                    sprite->get_u_min(), sprite->get_v_min(),
-                                    sprite->get_u_max(), sprite->get_v_min(),
-                                    sprite->get_u_min(), sprite->get_v_max(),
-                                    sprite->get_u_max(), sprite->get_v_max(),
-                            }
-                    );
-                }
-
+            for (const auto &[texture_id, data]: groups) {
                 auto &ctx = Impl::ctxs[ctx_index];
-                ctx.v_tex_coords.orphan(sprites.size() * 4 * 2 * sizeof(float));
-                ctx.v_tex_coords.update(v_tex_coords.data(), v_tex_coords.size() * sizeof(float));
+                ctx.v_tex_coords.orphan(data.instance_count * 4 * 2 * sizeof(float));
+                ctx.v_tex_coords.update(data.v_tex_coords.data(), data.v_tex_coords.size() * sizeof(float));
 
-                ctx.s_positions.orphan(sprites.size() * 2 * sizeof(float));
-                ctx.s_positions.update(s_positions.data(), s_positions.size() * sizeof(float));
+                ctx.s_positions.orphan(data.instance_count * 2 * sizeof(float));
+                ctx.s_positions.update(data.s_positions.data(), data.s_positions.size() * sizeof(float));
 
-                ctx.s_sizes.orphan(sprites.size() * 2 * sizeof(float));
-                ctx.s_sizes.update(s_sizes.data(), s_sizes.size() * sizeof(float));
+                ctx.s_sizes.orphan(data.instance_count * 2 * sizeof(float));
+                ctx.s_sizes.update(data.s_sizes.data(), data.s_sizes.size() * sizeof(float));
 
                 ctx.vao.bind();
-                texture.bind();
+                Texture::bind(data.texture_id);
                 glDrawArraysInstanced(
                         GL_TRIANGLE_STRIP,
-                        0, 4, sprites.size() // NOLINT(cppcoreguidelines-narrowing-conversions)
+                        0, 4, data.instance_count // NOLINT(cppcoreguidelines-narrowing-conversions)
                 );
 
                 --last_used_ctx_index;
@@ -176,7 +171,7 @@ namespace kex {
         }
 
     private:
-        std::unordered_map<unsigned int, std::vector<const Sprite *>> groups;
+        std::unordered_map<unsigned int, SpriteBatchGroupData> groups;
         int ctx_index = -1;
 
         static const int TEXTURE_SLOT = 0;
