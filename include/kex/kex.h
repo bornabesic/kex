@@ -23,7 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    extern int logical_viewport_w;
+    extern int logical_viewport_h;
+
     void initialize();
+
+    void set_viewport(int x, int y, int w, int h);
+
+    void set_logical_viewport(int w, int h);
 
 }
 

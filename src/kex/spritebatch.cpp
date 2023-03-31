@@ -112,23 +112,18 @@ namespace kex {
             ++last_used_ctx_index;
 
             // Shaders
-            static auto vertex_shader = VertexShader(vertex_shader_source);
-            static auto fragment_shader = FragmentShader(fragment_shader_source);
-            static auto program = Program(vertex_shader, fragment_shader);
+            static const auto vertex_shader = VertexShader(vertex_shader_source);
+            static const auto fragment_shader = FragmentShader(fragment_shader_source);
+            static const auto program = Program(vertex_shader, fragment_shader);
             program.use();
 
-            static auto _ = []() {
-                // TODO Move
-                int width = 800;
-                int height = 600;
-                const auto texture_location = program.get_uniform_location("tex");
-                const auto width_location = program.get_uniform_location("width");
-                const auto height_location = program.get_uniform_location("height");
-                glUniform1i(texture_location, Impl::TEXTURE_SLOT);
-                glUniform1i(width_location, width);
-                glUniform1i(height_location, height);
-                return true;
-            }();
+            static const auto texture_location = program.get_uniform_location("tex");
+            static const auto width_location = program.get_uniform_location("width");
+            static const auto height_location = program.get_uniform_location("height");
+
+            glUniform1i(texture_location, Impl::TEXTURE_SLOT);
+            glUniform1i(height_location, kex::logical_viewport_h);
+            glUniform1i(width_location, kex::logical_viewport_w);
         };
 
         void add(const Sprite &sprite) {

@@ -22,10 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/kex.h>
 
 #ifdef KEX_USE_GLEW
-#include "GL/glew.h"
+#include <GL/glew.h>
 #endif
 
 namespace kex {
+
+    int logical_viewport_w;
+    int logical_viewport_h;
 
     void initialize() {
 #ifdef KEX_USE_GLEW
@@ -36,11 +39,25 @@ namespace kex {
         }
 #endif
 
+        RectangleDef opengl_viewport{};
+        glGetIntegerv(GL_VIEWPORT, reinterpret_cast<GLint *>(&opengl_viewport));
+        logical_viewport_w = opengl_viewport.w;
+        logical_viewport_h = opengl_viewport.h;
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         std::cout << "Renderer: " << glGetString(GL_RENDERER) << '\n';
         std::cout << "OpenGL version: " << glGetString(GL_VERSION) << '\n';
+    }
+
+    void set_viewport(int x, int y, int w, int h) {
+        glViewport(x, y, w, h);
+    }
+
+    void set_logical_viewport(int w, int h) {
+        logical_viewport_w = w;
+        logical_viewport_h = h;
     }
 
 }
