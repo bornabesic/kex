@@ -41,11 +41,11 @@ namespace kex {
 
         Buffer(Buffer &&buffer) noexcept;
 
-        [[nodiscard]] constexpr BufferType get_type() const;
+        [[nodiscard]] constexpr BufferType type() const;
 
-        [[nodiscard]] constexpr BufferUsage get_usage() const;
+        [[nodiscard]] constexpr BufferUsage usage() const;
 
-        [[nodiscard]] unsigned int get_id() const;
+        [[nodiscard]] unsigned int id() const;
 
         void replace(const void *data, int size);
 

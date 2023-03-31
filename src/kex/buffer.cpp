@@ -108,13 +108,13 @@ namespace kex {
     Buffer<T, U>::Buffer(Buffer<T, U> &&buffer) noexcept = default;
 
     template<BufferType T, BufferUsage U>
-    constexpr BufferType Buffer<T, U>::get_type() const { return T; }
+    constexpr BufferType Buffer<T, U>::type() const { return T; }
 
     template<BufferType T, BufferUsage U>
-    constexpr BufferUsage Buffer<T, U>::get_usage() const { return U; }
+    constexpr BufferUsage Buffer<T, U>::usage() const { return U; }
 
     template<BufferType T, BufferUsage U>
-    unsigned int Buffer<T, U>::get_id() const { return impl->id; }
+    unsigned int Buffer<T, U>::id() const { return impl->id; }
 
     template<BufferType T, BufferUsage U>
     void Buffer<T, U>::replace(const void *data, int size) { impl->replace(data, size); }
