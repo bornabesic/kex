@@ -54,9 +54,9 @@ namespace kex {
 
         ~Sprite();
 
-        [[nodiscard]] const Texture &get_texture() const;
+        [[nodiscard]] const Texture &texture() const;
 
-        [[nodiscard]] const RectangleDef &get_texture_region() const;
+        [[nodiscard]] const RectangleDef &texture_region() const;
 
         [[nodiscard]] int width() const;
 
@@ -70,7 +70,7 @@ namespace kex {
 
         void set_tint(float r, float g, float b, float a = 1.f);
 
-        [[nodiscard]] std::array<float, 3 * 3> get_transform() const;
+        [[nodiscard]] std::array<float, 3 * 3> transform() const;
 
         [[nodiscard]] float u_min() const;
 

@@ -98,9 +98,9 @@ namespace kex {
     Sprite::Sprite(const Texture &texture, const RectangleDef &region) : impl(
             std::make_unique<Impl>(texture, region)) {}
 
-    const Texture &Sprite::get_texture() const { return impl->texture; }
+    const Texture &Sprite::texture() const { return impl->texture; }
 
-    const RectangleDef &Sprite::get_texture_region() const { return impl->texture_region; }
+    const RectangleDef &Sprite::texture_region() const { return impl->texture_region; }
 
     float Sprite::u_min() const { return impl->u_min; }
 
@@ -114,7 +114,7 @@ namespace kex {
 
     int Sprite::height() const { return impl->h; }
 
-    std::array<float, 3 * 3> Sprite::get_transform() const {
+    std::array<float, 3 * 3> Sprite::transform() const {
         return impl->get_transform(x, y, rotation, shear_x, shear_y, scale_x, scale_y);
     }
 
