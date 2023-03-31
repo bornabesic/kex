@@ -66,15 +66,15 @@ namespace kex {
         out highp vec4 color_out;
 
         void main() {
-            color_out = texture(tex_u, tex_coords) * tint;
+            color_out = texture2D(tex, tex_coords) * tint;
         }
     )";
 
     static constexpr float normalized_positions_data[] = {
-            -1.f, -1.f,
-            1.f, -1.f,
             -1.f, 1.f,
             1.f, 1.f,
+            -1.f, -1.f,
+            1.f, -1.f,
     };
 
     struct SpriteBatchCtx {

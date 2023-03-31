@@ -40,7 +40,7 @@ namespace kex {
 
             // Load the image
             int n_original_channels;
-            stbi_set_flip_vertically_on_load(true);
+            // stbi_set_flip_vertically_on_load(true);
             unsigned char *data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
             if (data == nullptr) {
                 throw std::runtime_error("Could not load texture from " + path);

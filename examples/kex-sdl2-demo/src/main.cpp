@@ -51,7 +51,6 @@ int main() {
     kex::Sprite sprite(texture);
     kex::Sprite sprite2(texture);
 
-    glViewport(0, 0, 800, 600);
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     constexpr bool vsync = true;
