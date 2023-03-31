@@ -57,8 +57,9 @@ namespace kex {
             //     x, y, 1
             // };
 
-            const auto cos = std::cos(rotation);
-            const auto sin = std::sin(rotation);
+            // Negative to keep CCW rotation direction since y-axis points down in the pixel coordinate system
+            const auto cos = std::cos(-rotation);
+            const auto sin = std::sin(-rotation);
             const auto w_scaled = w * scale_x;
             const auto h_scaled = h * scale_y;
             return {

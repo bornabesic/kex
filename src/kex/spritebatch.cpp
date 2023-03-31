@@ -48,8 +48,8 @@ namespace kex {
         out highp vec4 tint;
 
         void main() {
-            highp vec3 position = transform_in * vec3(base_position_in, 1) / vec3(width, height, 1);
-            gl_Position = vec4(position.xy, 0, 1);
+            highp vec3 position = transform_in * vec3(base_position_in, 1) / vec3(width / 2, -height / 2, 1) - vec3(1, -1, 0);
+            gl_Position = vec4(position.xy, 0, position.z);
             tex_coords = tex_coords_in;
             tint = tint_in;
         }
@@ -71,10 +71,10 @@ namespace kex {
     )";
 
     static constexpr float normalized_positions_data[] = {
-            -1.f, 1.f,
-            1.f, 1.f,
-            -1.f, -1.f,
-            1.f, -1.f,
+            -0.5f, 0.5f,
+            0.5f, 0.5f,
+            -0.5f, -0.5f,
+            0.5f, -0.5f,
     };
 
     struct SpriteBatchCtx {
