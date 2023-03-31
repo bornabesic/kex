@@ -118,12 +118,13 @@ namespace kex {
             program.use();
 
             static auto _ = []() {
+                // TODO Move
+                int width = 800;
+                int height = 600;
                 const auto texture_location = program.get_uniform_location("tex");
                 const auto width_location = program.get_uniform_location("width");
                 const auto height_location = program.get_uniform_location("height");
                 glUniform1i(texture_location, Impl::TEXTURE_SLOT);
-                int width = 800;
-                int height = 600;
                 glUniform1i(width_location, width);
                 glUniform1i(height_location, height);
                 return true;
