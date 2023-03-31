@@ -27,11 +27,17 @@ namespace kex {
     class Texture {
     public:
         explicit Texture(const std::string &path, bool mipmap = false);
+
         void bind() const;
+
         static void bind(unsigned int id);
-        [[nodiscard]] int get_width() const;
-        [[nodiscard]] int get_height() const;
-        [[nodiscard]] unsigned int get_id() const;
+
+        [[nodiscard]] int width() const;
+
+        [[nodiscard]] int height() const;
+
+        [[nodiscard]] unsigned int id() const;
+
         ~Texture();
 
     private:

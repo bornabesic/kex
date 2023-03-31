@@ -84,11 +84,11 @@ namespace kex {
 
     void Texture::bind() const { impl->bind(); }
 
-    int Texture::get_width() const { return impl->width; }
+    int Texture::width() const { return impl->width; }
 
-    int Texture::get_height() const { return impl->height; }
+    int Texture::height() const { return impl->height; }
 
-    unsigned int Texture::get_id() const { return impl->id; }
+    unsigned int Texture::id() const { return impl->id; }
 
     void Texture::bind(unsigned int id) {
         glActiveTexture(GL_TEXTURE0);

@@ -24,7 +24,7 @@ namespace kex {
     class Sprite::Impl {
     public:
         explicit Impl(const Texture &texture) :
-                Impl(texture, {0, 0, texture.get_width(), texture.get_height()}) {}
+                Impl(texture, {0, 0, texture.width(), texture.height()}) {}
 
         explicit Impl(const Texture &texture, const RectangleDef &rectangle) :
                 texture(texture),
@@ -75,19 +75,19 @@ namespace kex {
         const float w, h;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
-            return static_cast<float>(region.x) / texture.get_width();
+            return static_cast<float>(region.x) / texture.width();
         }
 
         static inline float compute_u_max(const RectangleDef &region, const Texture &texture) {
-            return static_cast<float>(region.x + region.w) / texture.get_width();
+            return static_cast<float>(region.x + region.w) / texture.width();
         }
 
         static inline float compute_v_min(const RectangleDef &region, const Texture &texture) {
-            return 1 - static_cast<float>(region.y + region.h) / texture.get_height();
+            return 1 - static_cast<float>(region.y + region.h) / texture.height();
         }
 
         static inline float compute_v_max(const RectangleDef &region, const Texture &texture) {
-            return 1 - static_cast<float>(region.y) / texture.get_height();
+            return 1 - static_cast<float>(region.y) / texture.height();
         }
 
         friend Sprite;
