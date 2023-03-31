@@ -94,7 +94,7 @@ namespace kex {
 
     void VertexArray::bind() const { impl->bind(); }
 
-    unsigned int VertexArray::get_id() const { return impl->id; }
+    unsigned int VertexArray::id() const { return impl->id; }
 
     VertexArray::VertexArray(VertexArray &&vertex_array) noexcept = default;
 

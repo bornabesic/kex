@@ -36,7 +36,7 @@ namespace kex {
 
         VertexArray(VertexArray &&vertex_array) noexcept;
 
-        [[nodiscard]] unsigned int get_id() const;
+        [[nodiscard]] unsigned int id() const;
 
         void bind() const;
 
