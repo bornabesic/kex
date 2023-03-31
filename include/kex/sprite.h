@@ -27,6 +27,27 @@ namespace kex {
 
     class Sprite {
     public:
+        // Translation
+        float x;
+        float y;
+
+        // Rotation
+        float rotation = 0.f;
+
+        // Scale
+        float scale_x = 1.f;
+        float scale_y = 1.f;
+
+        // Shear
+        float shear_x = 0.f;
+        float shear_y = 0.f;
+
+        // Tint
+        float tint_r = 1.f;
+        float tint_g = 1.f;
+        float tint_b = 1.f;
+        float tint_a = 0.f; // TODO Change to 1
+
         explicit Sprite(const Texture &texture);
 
         explicit Sprite(const Texture &texture, const RectangleDef &region);
@@ -37,63 +58,27 @@ namespace kex {
 
         [[nodiscard]] const RectangleDef &get_texture_region() const;
 
-        [[nodiscard]] int get_width() const;
+        [[nodiscard]] int width() const;
 
-        [[nodiscard]] int get_height() const;
+        [[nodiscard]] int height() const;
 
-        [[nodiscard]] float get_position_x() const;
+        void set_position(float x, float y);
 
-        [[nodiscard]] float get_position_y() const;
+        void set_scale(float scale_x, float scale_y);
 
-        void set_position_x(float x);
+        void set_shear(float shear_x, float shear_y);
 
-        void set_position_y(float y);
-
-        void set_position_xy(float x, float y);
-
-        void set_rotation(float rotation);
-
-        [[nodiscard]] float get_rotation() const;
-
-        void set_color(float red, float green, float blue, float alpha = 1.f);
-
-        [[nodiscard]] float get_color_red() const;
-
-        [[nodiscard]] float get_color_blue() const;
-
-        [[nodiscard]] float get_color_green() const;
-
-        [[nodiscard]] float get_color_alpha() const;
-
-        [[nodiscard]] float get_scale_x() const;
-
-        [[nodiscard]] float get_scale_y() const;
-
-        void set_scale_x(float scale_x);
-
-        void set_scale_y(float scale_y);
-
-        void set_scale_xy(float scale_x, float scale_y);
-
-        [[nodiscard]] float get_shear_x() const;
-
-        [[nodiscard]] float get_shear_y() const;
-
-        void set_shear_x(float shear_x);
-
-        void set_shear_y(float shear_y);
-
-        void set_shear_xy(float shear_x, float shear_y);
+        void set_tint(float r, float g, float b, float a = 1.f);
 
         [[nodiscard]] std::array<float, 3 * 3> get_transform() const;
 
-        [[nodiscard]] float get_u_min() const;
+        [[nodiscard]] float u_min() const;
 
-        [[nodiscard]] float get_u_max() const;
+        [[nodiscard]] float u_max() const;
 
-        [[nodiscard]] float get_v_min() const;
+        [[nodiscard]] float v_min() const;
 
-        [[nodiscard]] float get_v_max() const;
+        [[nodiscard]] float v_max() const;
 
     private:
         class Impl;

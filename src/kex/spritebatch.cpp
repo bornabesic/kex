@@ -137,19 +137,19 @@ namespace kex {
             group_data.v_tex_coords.insert(
                     group_data.v_tex_coords.end(),
                     {
-                            sprite.get_u_min(), sprite.get_v_min(),
-                            sprite.get_u_max(), sprite.get_v_min(),
-                            sprite.get_u_min(), sprite.get_v_max(),
-                            sprite.get_u_max(), sprite.get_v_max(),
+                            sprite.u_min(), sprite.v_min(),
+                            sprite.u_max(), sprite.v_min(),
+                            sprite.u_min(), sprite.v_max(),
+                            sprite.u_max(), sprite.v_max(),
                     }
             );
             group_data.s_colors.insert(
                     group_data.s_colors.end(),
                     {
-                            sprite.get_color_red(),
-                            sprite.get_color_green(),
-                            sprite.get_color_blue(),
-                            sprite.get_color_alpha()
+                            sprite.tint_r,
+                            sprite.tint_g,
+                            sprite.tint_b,
+                            sprite.tint_a,
                     }
             );
 

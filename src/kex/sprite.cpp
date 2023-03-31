@@ -36,14 +36,10 @@ namespace kex {
                 w(rectangle.w),
                 h(rectangle.h) {}
 
-        void set_color(float red, float green, float blue, float alpha) {
-            r = red;
-            g = green;
-            b = blue;
-            a = alpha;
-        }
 
-        [[nodiscard]] std::array<float, 3 * 3> get_transform() const {
+        [[nodiscard]] std::array<float, 3 * 3>
+        get_transform(float x, float y, float rotation, float shear_x, float shear_y, float scale_x,
+                      float scale_y) const {
             // NOTE Column-major!
             // Vertex is a column vector multiplied by the transform from the left
 
@@ -77,11 +73,6 @@ namespace kex {
         const RectangleDef texture_region;
         const float u_min, u_max, v_min, v_max;
         const float w, h;
-        float x = 0, y = 0;
-        float r = 1.f, g = 1.f, b = 1.f, a = 0.f;
-        float scale_x = 1.f, scale_y = 1.f;
-        float shear_x = 0.f, shear_y = 0.f;
-        float rotation = 0.f;
 
         static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
             return static_cast<float>(region.x) / texture.get_width();
@@ -111,73 +102,42 @@ namespace kex {
 
     const RectangleDef &Sprite::get_texture_region() const { return impl->texture_region; }
 
-    float Sprite::get_u_min() const { return impl->u_min; }
+    float Sprite::u_min() const { return impl->u_min; }
 
-    float Sprite::get_u_max() const { return impl->u_max; }
+    float Sprite::u_max() const { return impl->u_max; }
 
-    float Sprite::get_v_min() const { return impl->v_min; }
+    float Sprite::v_min() const { return impl->v_min; }
 
-    float Sprite::get_v_max() const { return impl->v_max; }
+    float Sprite::v_max() const { return impl->v_max; }
 
-    int Sprite::get_width() const { return impl->w; }
+    int Sprite::width() const { return impl->w; }
 
-    int Sprite::get_height() const { return impl->h; }
+    int Sprite::height() const { return impl->h; }
 
-    float Sprite::get_position_x() const { return impl->x; }
-
-    float Sprite::get_position_y() const { return impl->y; }
-
-    void Sprite::set_position_x(float x) { impl->x = x; }
-
-    void Sprite::set_position_y(float y) { impl->y = y; }
-
-    void Sprite::set_color(float red, float green, float blue, float alpha) {
-        impl->set_color(red, green, blue, alpha);
+    std::array<float, 3 * 3> Sprite::get_transform() const {
+        return impl->get_transform(x, y, rotation, shear_x, shear_y, scale_x, scale_y);
     }
 
-    float Sprite::get_color_red() const { return impl->r; }
-
-    float Sprite::get_color_blue() const { return impl->b; }
-
-    float Sprite::get_color_green() const { return impl->g; }
-
-    float Sprite::get_color_alpha() const { return impl->a; }
-
-    void Sprite::set_position_xy(float x, float y) {
-        impl->x = x;
-        impl->y = y;
+    void Sprite::set_tint(float r, float g, float b, float a) {
+        tint_r = r;
+        tint_g = g;
+        tint_b = b;
+        tint_a = a;
     }
 
-    std::array<float, 3 * 3> Sprite::get_transform() const { return impl->get_transform(); }
-
-    float Sprite::get_shear_x() const { return impl->shear_x; }
-
-    float Sprite::get_shear_y() const { return impl->shear_y; }
-
-    void Sprite::set_shear_x(float shear_x) { impl->shear_x = shear_x; }
-
-    void Sprite::set_shear_y(float shear_y) { impl->shear_y = shear_y; }
-
-    void Sprite::set_shear_xy(float shear_x, float shear_y) {
-        impl->shear_x = shear_x;
-        impl->shear_y = shear_y;
+    void Sprite::set_position(float x, float y) {
+        this->x = x;
+        this->y = y;
     }
 
-    void Sprite::set_rotation(float rotation) { impl->rotation = rotation; }
+    void Sprite::set_scale(float scale_x, float scale_y) {
+        this->scale_x = scale_x;
+        this->scale_y = scale_y;
+    }
 
-    float Sprite::get_rotation() const { return impl->rotation; }
-
-    float Sprite::get_scale_x() const { return impl->scale_x; }
-
-    float Sprite::get_scale_y() const { return impl->scale_y; }
-
-    void Sprite::set_scale_x(float scale_x) { impl->scale_x = scale_x; }
-
-    void Sprite::set_scale_y(float scale_y) { impl->scale_y = scale_y; }
-
-    void Sprite::set_scale_xy(float scale_x, float scale_y) {
-        impl->scale_x = scale_x;
-        impl->scale_y = scale_y;
+    void Sprite::set_shear(float shear_x, float shear_y) {
+        this->shear_x = shear_x;
+        this->shear_y = shear_y;
     }
 
     Sprite::~Sprite() = default;

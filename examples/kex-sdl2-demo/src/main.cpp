@@ -63,8 +63,8 @@ int main() {
     constexpr float pi = 3.14f;
     float step = 0.f;
     Uint64 previous_ticks = SDL_GetTicks64();
-    sprite.set_color(1.f, 0.f, 1.f, 0.5f);
-    sprite2.set_rotation(pi / 4);
+    sprite.set_tint(1.f, 0.f, 1.f, 0.5f);
+    sprite2.rotation = pi / 4;
     while (running) {
         const Uint64 ticks = SDL_GetTicks64();
         const float delta = (ticks - previous_ticks) / 1000.f;
@@ -79,13 +79,13 @@ int main() {
         }
 
         step += delta;
-        sprite.set_position_x(SDL_sinf(step * pi * 2) * amplitude);
-        sprite.set_position_y(SDL_cosf(step * pi * 2) * amplitude);
-        sprite.set_shear_x(SDL_sinf(step * pi * 2) * amplitude);
-        sprite2.set_scale_y(SDL_sinf(step * pi * 2));
+        sprite.x = SDL_sinf(step * pi * 2) * amplitude;
+        sprite.y = SDL_cosf(step * pi * 2) * amplitude;
+        sprite.shear_x = SDL_sinf(step * pi * 2) * amplitude;
+        sprite2.scale_y = SDL_sinf(step * pi * 2);
 
-        sprite2.set_position_x(SDL_cosf(step * pi * 2 + pi) * amplitude);
-        sprite2.set_position_y(SDL_sinf(step * pi * 2 + pi) * amplitude);
+        sprite2.x = SDL_cosf(step * pi * 2 + pi) * amplitude;
+        sprite2.y = SDL_sinf(step * pi * 2 + pi) * amplitude;
 
         glClear(GL_COLOR_BUFFER_BIT);
         {
