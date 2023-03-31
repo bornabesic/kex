@@ -34,9 +34,9 @@ namespace kex {
     public:
         explicit Shader(const std::string &source);
 
-        [[nodiscard]] constexpr ShaderType get_type() const;
+        [[nodiscard]] constexpr ShaderType type() const;
 
-        [[nodiscard]] unsigned int get_id() const;
+        [[nodiscard]] unsigned int id() const;
 
         ~Shader();
 

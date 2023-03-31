@@ -28,8 +28,8 @@ namespace kex {
     public:
         Impl(const kex::VertexShader &vertex_shader, const kex::FragmentShader &fragment_shader) {
             id = glCreateProgram();
-            glAttachShader(id, vertex_shader.get_id());
-            glAttachShader(id, fragment_shader.get_id());
+            glAttachShader(id, vertex_shader.id());
+            glAttachShader(id, fragment_shader.id());
             glLinkProgram(id);
         }
 

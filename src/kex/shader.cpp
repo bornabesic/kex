@@ -71,10 +71,10 @@ namespace kex {
     Shader<T>::Shader(const std::string &source) : impl(std::make_unique<Impl>(source)) {}
 
     template<ShaderType T>
-    constexpr ShaderType Shader<T>::get_type() const { return T; }
+    constexpr ShaderType Shader<T>::type() const { return T; }
 
     template<ShaderType T>
-    unsigned int Shader<T>::get_id() const { return impl->id; }
+    unsigned int Shader<T>::id() const { return impl->id; }
 
     template<ShaderType T>
     Shader<T>::~Shader() = default;
