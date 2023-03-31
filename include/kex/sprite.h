@@ -46,7 +46,7 @@ namespace kex {
         float tint_r = 1.f;
         float tint_g = 1.f;
         float tint_b = 1.f;
-        float tint_a = 0.f; // TODO Change to 1
+        float tint_a = 1.f;
 
         explicit Sprite(const Texture &texture);
 

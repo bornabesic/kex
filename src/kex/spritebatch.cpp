@@ -39,16 +39,16 @@ namespace kex {
         layout (location = 2) in highp mat3 transform_in;
         // layout (location = 3)
         // layout (location = 4)
-        layout (location = 5) in highp vec4 color_in;
+        layout (location = 5) in highp vec4 tint_in;
 
         out highp vec2 tex_coords;
-        out highp vec4 color;
+        out highp vec4 tint;
 
         void main() {
             highp vec3 position = transform_in * vec3(base_position_in, 1) / vec3(800, 600, 1);
             gl_Position = vec4(position.xy, 0, 1);
             tex_coords = tex_coords_in;
-            color = color_in;
+            tint = tint_in;
         }
     )";
 
@@ -58,16 +58,12 @@ namespace kex {
         uniform sampler2D tex_u;
 
         in highp vec2 tex_coords;
-        in highp vec4 color;
+        in highp vec4 tint;
 
         out highp vec4 color_out;
 
         void main() {
-            color_out = mix(
-                texture(tex_u, tex_coords),
-                vec4(color.rgb, 1),
-                color.a
-            );
+            color_out = texture(tex_u, tex_coords) * tint;
         }
     )";
 
@@ -83,14 +79,14 @@ namespace kex {
         StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
         StreamArrayBuffer v_tex_coords;
         StreamArrayBuffer s_transforms;
-        StreamArrayBuffer s_colors;
+        StreamArrayBuffer s_tints;
     };
 
     struct SpriteBatchGroupData {
         unsigned int texture_id = 0;
         std::vector<float> v_tex_coords;
         std::vector<float> s_transforms;
-        std::vector<float> s_colors;
+        std::vector<float> s_tints;
         int instance_count = 0;
     };
 
@@ -108,7 +104,7 @@ namespace kex {
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_positions);
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords);
                 ctx.vao.add_attribute<VertexAttr::MAT3, 1>(ctx.s_transforms);
-                ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_colors);
+                ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_tints);
             }
             ++last_used_ctx_index;
 
@@ -143,8 +139,8 @@ namespace kex {
                             sprite.u_max(), sprite.v_max(),
                     }
             );
-            group_data.s_colors.insert(
-                    group_data.s_colors.end(),
+            group_data.s_tints.insert(
+                    group_data.s_tints.end(),
                     {
                             sprite.tint_r,
                             sprite.tint_g,
@@ -166,8 +162,8 @@ namespace kex {
                 ctx.s_transforms.orphan(data.instance_count * 3 * 3 * sizeof(float));
                 ctx.s_transforms.update(data.s_transforms.data(), data.s_transforms.size() * sizeof(float));
 
-                ctx.s_colors.orphan(data.instance_count * 4 * sizeof(float));
-                ctx.s_colors.update(data.s_colors.data(), data.s_colors.size() * sizeof(float));
+                ctx.s_tints.orphan(data.instance_count * 4 * sizeof(float));
+                ctx.s_tints.update(data.s_tints.data(), data.s_tints.size() * sizeof(float));
 
                 ctx.vao.bind();
                 Texture::bind(data.texture_id);
