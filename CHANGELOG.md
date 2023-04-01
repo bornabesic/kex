@@ -14,6 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Shader` + `Program`
   - `VertexArray` + `Buffer`
 - SDL 2 demo
-- OpenGL function loading via GLEW (optional; enabled by default)
+- OpenGL API via GLAD
 
 [unreleased]: https://github.com/bornabesic/kex/compare/6dca6ec...HEAD
