@@ -16,29 +16,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SHADER_H
-#define KEX_SHADER_H
+#ifndef KEX_SPRITEBATCH_HPP
+#define KEX_SPRITEBATCH_HPP
 
-#include <string>
 #include <memory>
+#include <kex/sprite.hpp>
 
 namespace kex {
 
-    enum ShaderType {
-        VERTEX,
-        FRAGMENT,
-    };
-
-    template<ShaderType T>
-    class Shader {
+    class SpriteBatch {
     public:
-        explicit Shader(const std::string &source);
+        SpriteBatch();
 
-        [[nodiscard]] constexpr ShaderType type() const;
+        void add(const Sprite &sprite);
 
-        [[nodiscard]] unsigned int id() const;
-
-        ~Shader();
+        ~SpriteBatch();
 
     private:
         class Impl;
@@ -46,9 +38,6 @@ namespace kex {
         std::unique_ptr<Impl> impl;
     };
 
-    using VertexShader = Shader<ShaderType::VERTEX>;
-    using FragmentShader = Shader<ShaderType::FRAGMENT>;
-
 }
 
-#endif //KEX_SHADER_H
+#endif //KEX_SPRITEBATCH_HPP

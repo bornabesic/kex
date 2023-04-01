@@ -16,12 +16,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SPRITE_H
-#define KEX_SPRITE_H
+#ifndef KEX_SPRITE_HPP
+#define KEX_SPRITE_HPP
 
 #include <memory>
-#include <kex/texture.h>
-#include <kex/def.h>
+#include <kex/texture.hpp>
+#include <kex/def.hpp>
 
 namespace kex {
 
@@ -88,4 +88,4 @@ namespace kex {
 
 }
 
-#endif //KEX_SPRITE_H
+#endif //KEX_SPRITE_HPP

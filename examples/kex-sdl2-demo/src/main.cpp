@@ -21,10 +21,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <SDL.h>
 
-#include <kex/kex.h>
-#include <kex/texture.h>
-#include <kex/sprite.h>
-#include <kex/spritebatch.h>
+#include <kex/kex.hpp>
+#include <kex/texture.hpp>
+#include <kex/sprite.hpp>
+#include <kex/spritebatch.hpp>
 
 #if KEX_USE_GLEW
 #include <GL/glew.h>

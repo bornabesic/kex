@@ -16,31 +16,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_PROGRAM_H
-#define KEX_PROGRAM_H
-
-#include <kex/shader.h>
-#include <memory>
+#ifndef KEX_DEF_HPP
+#define KEX_DEF_HPP
 
 namespace kex {
 
-    class Program {
-    public:
-        Program(const VertexShader &vertex_shader, const FragmentShader &fragment_shader);
-
-        int get_uniform_location(const char *name) const;
-
-        void use() const;
-
-        ~Program();
-
-    private:
-        class Impl;
-
-        std::unique_ptr<Impl> impl;
+    struct RectangleDef {
+        int x, y, w, h;
     };
 
 }
 
-
-#endif //KEX_PROGRAM_H
+#endif //KEX_DEF_HPP

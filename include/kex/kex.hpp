@@ -16,15 +16,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_DEF_H
-#define KEX_DEF_H
+#ifndef KEX_KEX_HPP
+#define KEX_KEX_HPP
 
 namespace kex {
 
-    struct RectangleDef {
-        int x, y, w, h;
-    };
+    extern int logical_viewport_w;
+    extern int logical_viewport_h;
+
+    void initialize();
+
+    void set_viewport(int x, int y, int w, int h);
+
+    void set_logical_viewport(int w, int h);
 
 }
 
-#endif //KEX_DEF_H
+#endif //KEX_KEX_HPP

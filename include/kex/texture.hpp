@@ -16,8 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_TEXTURE_H
-#define KEX_TEXTURE_H
+#ifndef KEX_TEXTURE_HPP
+#define KEX_TEXTURE_HPP
 
 #include <string>
 #include <memory>
@@ -48,4 +48,4 @@ namespace kex {
 
 } // kex
 
-#endif //KEX_TEXTURE_H
+#endif //KEX_TEXTURE_HPP

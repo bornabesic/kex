@@ -26,8 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include <kex/texture.h>
-#include <iostream>
+#include <kex/texture.hpp>
 
 namespace kex {
 

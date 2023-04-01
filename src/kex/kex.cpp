@@ -19,7 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <iostream>
 
-#include <kex/kex.h>
+#include <kex/kex.hpp>
+#include <kex/def.hpp>
 
 #ifdef KEX_USE_GLEW
 #include <GL/glew.h>

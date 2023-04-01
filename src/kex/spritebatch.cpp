@@ -18,12 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <vector>
 #include <unordered_map>
-#include <kex/spritebatch.h>
-#include <kex/sprite.h>
-#include <kex/shader.h>
-#include <kex/kex.h>
-#include <kex/program.h>
-#include <kex/vertexarray.h>
+#include <kex/spritebatch.hpp>
+#include <kex/sprite.hpp>
+#include <kex/shader.hpp>
+#include "kex/kex.hpp"
+#include <kex/program.hpp>
+#include <kex/vertexarray.hpp>
 
 #ifdef KEX_USE_GLEW
 #include <GL/glew.h>

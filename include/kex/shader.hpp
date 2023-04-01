@@ -16,22 +16,39 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_KEX_H
-#define KEX_KEX_H
+#ifndef KEX_SHADER_HPP
+#define KEX_SHADER_HPP
 
-#include <kex/buffer.h>
+#include <string>
+#include <memory>
 
 namespace kex {
 
-    extern int logical_viewport_w;
-    extern int logical_viewport_h;
+    enum ShaderType {
+        VERTEX,
+        FRAGMENT,
+    };
 
-    void initialize();
+    template<ShaderType T>
+    class Shader {
+    public:
+        explicit Shader(const std::string &source);
 
-    void set_viewport(int x, int y, int w, int h);
+        [[nodiscard]] constexpr ShaderType type() const;
 
-    void set_logical_viewport(int w, int h);
+        [[nodiscard]] unsigned int id() const;
+
+        ~Shader();
+
+    private:
+        class Impl;
+
+        std::unique_ptr<Impl> impl;
+    };
+
+    using VertexShader = Shader<ShaderType::VERTEX>;
+    using FragmentShader = Shader<ShaderType::FRAGMENT>;
 
 }
 
-#endif //KEX_KEX_H
+#endif //KEX_SHADER_HPP

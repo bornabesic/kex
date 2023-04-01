@@ -16,21 +16,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_SPRITEBATCH_H
-#define KEX_SPRITEBATCH_H
+#ifndef KEX_PROGRAM_HPP
+#define KEX_PROGRAM_HPP
 
+#include <kex/shader.hpp>
 #include <memory>
-#include <kex/sprite.h>
 
 namespace kex {
 
-    class SpriteBatch {
+    class Program {
     public:
-        SpriteBatch();
+        Program(const VertexShader &vertex_shader, const FragmentShader &fragment_shader);
 
-        void add(const Sprite &sprite);
+        int get_uniform_location(const char *name) const;
 
-        ~SpriteBatch();
+        void use() const;
+
+        ~Program();
 
     private:
         class Impl;
@@ -40,5 +42,4 @@ namespace kex {
 
 }
 
-
-#endif //KEX_SPRITEBATCH_H
+#endif //KEX_PROGRAM_HPP

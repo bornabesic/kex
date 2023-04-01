@@ -16,50 +16,34 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_BUFFER_H
-#define KEX_BUFFER_H
+#ifndef KEX_VERTEXARRAY_HPP
+#define KEX_VERTEXARRAY_HPP
 
 #include <memory>
+#include <kex/buffer.hpp>
 
 namespace kex {
 
-    enum BufferType {
-        ARRAY,
+    enum VertexAttr {
+        VEC2,
+        VEC4,
+        MAT3,
     };
 
-    enum BufferUsage {
-        STATIC,
-        STREAM,
-    };
-
-    template<BufferType T, BufferUsage U>
-    class Buffer {
+    class VertexArray {
     public:
-        explicit Buffer(int size);
+        VertexArray();
 
-        explicit Buffer();
-
-        Buffer(Buffer &&buffer) noexcept;
-
-        [[nodiscard]] constexpr BufferType type() const;
-
-        [[nodiscard]] constexpr BufferUsage usage() const;
+        VertexArray(VertexArray &&vertex_array) noexcept;
 
         [[nodiscard]] unsigned int id() const;
 
-        void replace(const void *data, int size);
-
-        void update(const void *data, int size, int offset = 0);
-
         void bind() const;
 
-        void unbind() const;
+        template<VertexAttr Attr, int Div = 0, bool Norm = false, BufferUsage Usg>
+        void add_attribute(const ArrayBuffer<Usg> &array_buffer);
 
-        [[nodiscard]] bool is_bound() const;
-
-        void orphan(int size = -1);
-
-        ~Buffer();
+        ~VertexArray();
 
     private:
         class Impl;
@@ -67,13 +51,6 @@ namespace kex {
         std::unique_ptr<Impl> impl;
     };
 
-    template<BufferUsage U>
-    using ArrayBuffer = Buffer<BufferType::ARRAY, U>;
-
-    using StaticArrayBuffer = ArrayBuffer<BufferUsage::STATIC>;
-    using StreamArrayBuffer = ArrayBuffer<BufferUsage::STREAM>;
-
 }
 
-
-#endif //KEX_BUFFER_H
+#endif //KEX_VERTEXARRAY_HPP
