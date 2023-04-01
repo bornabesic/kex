@@ -8,7 +8,7 @@
 
 from pathlib import Path
 
-project = 'kex'
+project = 'Kex'
 copyright = 'Borna Bešić'
 author = 'Borna Bešić'
 
