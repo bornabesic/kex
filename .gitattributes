@@ -1,0 +1,3 @@
+include/KHR/* linguist-vendored
+include/glad/* linguist-vendored
+src/glad/* linguist-vendored
