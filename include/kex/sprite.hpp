@@ -191,16 +191,16 @@ namespace kex {
         /** Region of the texture used for rendering the sprite. */
         [[nodiscard]] const RectangleDef &texture_region() const;
 
-        /** Smaller texture u-coordinate */
+        /** Start u-coordinate of the region within the texture */
         [[nodiscard]] float u_min() const;
 
-        /** Larger texture u-coordinate */
+        /** End u-coordinate of the region within the texture */
         [[nodiscard]] float u_max() const;
 
-        /** Smaller texture v-coordinate */
+        /** Start v-coordinate of the region within the texture */
         [[nodiscard]] float v_min() const;
 
-        /** Larger texture v-coordinate */
+        /** End v-coordinate of the region within the texture */
         [[nodiscard]] float v_max() const;
         ///@}
 
