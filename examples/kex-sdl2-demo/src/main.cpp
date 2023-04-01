@@ -26,9 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/sprite.hpp>
 #include <kex/spritebatch.hpp>
 
-#if KEX_USE_GLEW
-#include <GL/glew.h>
-#endif
+#include <glad/gles2.h>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -49,7 +47,7 @@ int main() {
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
 
     std::cout << "Hello from " << PROJECT_NAME << " v" << PROJECT_VERSION << '\n';
-    kex::initialize();
+    kex::initialize(SDL_GL_GetProcAddress);
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
     kex::Sprite sprite2(texture);
@@ -65,8 +63,8 @@ int main() {
     constexpr float pi = 3.14f;
     float step = 0.f;
     Uint64 previous_ticks = SDL_GetTicks64();
-    sprite.set_position(WIDTH / 2, WIDTH / 2);
-    sprite2.set_position(WIDTH / 4, WIDTH / 4);
+    sprite.set_position(WIDTH / 2, HEIGHT / 2);
+    sprite2.set_position(WIDTH / 4, HEIGHT / 4);
     sprite2.set_tint(1.f, 0.f, 0.f, 0.8f);
     sprite2.rotation = pi / 4;
     while (running) {

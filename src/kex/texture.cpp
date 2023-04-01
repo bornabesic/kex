@@ -19,9 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <memory>
 #include <filesystem>
 
-#ifdef KEX_USE_GLEW
-#include <GL/glew.h>
-#endif
+#include <glad/gles2.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>

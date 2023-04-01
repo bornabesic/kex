@@ -21,10 +21,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    using LoadProcedureFn = void *(*)(const char *name);
+
     extern int logical_viewport_w;
     extern int logical_viewport_h;
 
-    void initialize();
+    void initialize(LoadProcedureFn load_fn);
 
     void set_viewport(int x, int y, int w, int h);
 
