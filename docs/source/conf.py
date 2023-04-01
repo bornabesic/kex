@@ -9,7 +9,7 @@
 from pathlib import Path
 
 project = 'kex'
-copyright = '2023, Borna Bešić'
+copyright = 'Borna Bešić'
 author = 'Borna Bešić'
 
 # -- General configuration ---------------------------------------------------
@@ -25,11 +25,9 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'furo'
 html_static_path = ['_static']
 
-# Theme
-html_theme = 'furo'
 
 # Breathe
 breathe_projects = {project: str(Path(__file__).parent.parent / "xml")}
