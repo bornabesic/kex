@@ -4,7 +4,7 @@ build:
   tools:
     python: "3.10"
   commands:
-    - apt install doxygen
+    - sudo apt install doxygen
     - cd docs/
     - pip install -r requirements.txt
     - doxygen
