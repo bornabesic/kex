@@ -21,8 +21,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
 
+    /**
+     * Definition of a rectangle.
+     */
     struct RectangleDef {
-        int x, y, w, h;
+        /** Top left x-coordinate of the rectangle */
+        int x;
+
+        /** Top left y-coordinate of the rectangle */
+        int y;
+
+        /** Width of the rectangle */
+        int w;
+
+        /** Height of the rectangle */
+        int h;
     };
 
 }

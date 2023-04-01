@@ -26,16 +26,31 @@ namespace kex {
 
     class Texture {
     public:
+        /**
+         * Load a texture from an image file.
+         *
+         * @param path Path to the texture image file
+         * @param mipmap Flag indicating whether to generate a texture mipmap
+         */
         explicit Texture(const std::string &path, bool mipmap = false);
 
+        /**
+         * Bind the current texture for rendering.
+         */
         void bind() const;
 
+        /**
+         * Bind the texture with the specified identifier for rendering.
+         */
         static void bind(unsigned int id);
 
+        /** Width of the texture in pixels. */
         [[nodiscard]] int width() const;
 
+        /** Height of the texture in pixels. */
         [[nodiscard]] int height() const;
 
+        /** Texture identifier. */
         [[nodiscard]] unsigned int id() const;
 
         ~Texture();

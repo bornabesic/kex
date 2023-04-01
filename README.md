@@ -1,5 +1,8 @@
 # 🍪 Kex
 
+![GitHub](https://img.shields.io/github/license/bornabesic/kex?style=flat-square)
+![Read the Docs](https://img.shields.io/readthedocs/kex?style=flat-square)
+
 > Dok si rek'o keks!
 
 Plug-and-play 2D graphics C++ library built on top of [OpenGL ES 3.0 API](https://registry.khronos.org/OpenGL-Refpages/es3.0/).
