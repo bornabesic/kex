@@ -18,9 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <kex/buffer.hpp>
 
-#ifdef KEX_USE_GLEW
-#include <GL/glew.h>
-#endif
+#include <glad/gles2.h>
 
 namespace kex {
 

@@ -1,8 +1,8 @@
 
 FetchContent_Declare(
-        SDL2
-        URL https://github.com/libsdl-org/SDL/releases/download/release-2.26.3/SDL2-2.26.3.tar.gz
-        URL_HASH MD5=6ff7cbe9f77fc5afa79d54895dc6becc
+    SDL2
+    URL https://github.com/libsdl-org/SDL/releases/download/release-2.26.3/SDL2-2.26.3.tar.gz
+    URL_HASH MD5=6ff7cbe9f77fc5afa79d54895dc6becc
 )
 FetchContent_MakeAvailable(SDL2)
 include_directories(${SDL2_SOURCE_DIR}/include)
@@ -14,4 +14,4 @@ target_compile_definitions(
     PROJECT_NAME="${CMAKE_PROJECT_NAME}"
     PROJECT_VERSION="${CMAKE_PROJECT_VERSION}"
 )
-target_link_libraries(kex-sdl2-demo kex SDL2-static)
+target_link_libraries(kex-sdl2-demo kex SDL2)

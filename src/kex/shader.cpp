@@ -21,9 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream>
 #include <cstdlib>
 
-#ifdef KEX_USE_GLEW
-#include <GL/glew.h>
-#endif
+#include <glad/gles2.h>
 
 void panic_on_error(GLuint shader) {
     GLint is_shader_compiled;

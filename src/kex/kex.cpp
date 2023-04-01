@@ -22,23 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/kex.hpp>
 #include <kex/def.hpp>
 
-#ifdef KEX_USE_GLEW
-#include <GL/glew.h>
-#endif
+#include <glad/gles2.h>
 
 namespace kex {
 
     int logical_viewport_w;
     int logical_viewport_h;
 
-    void initialize() {
-#ifdef KEX_USE_GLEW
-        glewExperimental = GL_TRUE;
-        const GLenum glew_status = glewInit();
-        if (glew_status != GLEW_OK) {
-            throw std::runtime_error(reinterpret_cast<const char *>(glewGetErrorString(glew_status)));
+    void initialize(LoadProcedureFn load_fn) {
+        const int version_gles2 = gladLoadGLES2(reinterpret_cast<GLADloadfunc>(load_fn));
+        if (version_gles2 == 0) {
+            throw std::runtime_error("Could not load GLES2.");
         }
-#endif
 
         RectangleDef opengl_viewport{};
         glGetIntegerv(GL_VIEWPORT, reinterpret_cast<GLint *>(&opengl_viewport));
