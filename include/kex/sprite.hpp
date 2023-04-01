@@ -27,58 +27,182 @@ namespace kex {
 
     class Sprite {
     public:
-        // Translation
+        /** @name Translation
+         */
+        ///@{
+        /** x-coordinate of the center of the sprite. */
         float x;
+
+        /** y-coordinate of the center of the sprite. */
         float y;
 
-        // Rotation
-        float rotation = 0.f;
+        /**
+         * Set the position of the sprite.
+         *
+         * This utility function is equal to
+         * @code{.cpp}
+         * // extern kex::Sprite sprite;
+         * sprite.x = x;
+         * sprite.y = y;
+         * @endcode
+         *
+         * @param x x-coordinate of the sprite position
+         * @param y y-coordinate of the sprite position
+         */
+        void set_position(float x, float y);
+        ///@}
 
-        // Scale
+        /** @name Rotation
+         */
+        ///@{
+        /** Counterclockwise (CCW) rotation around the center in radians. */
+        float rotation = 0.f;
+        ///@}
+
+        /** @name Scale
+         */
+        ///@{
+        /** Scale factor in the x-axis direction. */
         float scale_x = 1.f;
+
+        /** Scale factor in the y-axis direction. */
         float scale_y = 1.f;
 
-        // Shear
+        /**
+         * Set the scale of the sprite.
+         *
+         * This utility function is equal to
+         * @code{.cpp}
+         * // extern kex::Sprite sprite;
+         * sprite.scale_x = scale_x;
+         * sprite.scale_y = scale_y;
+         * @endcode
+         *
+         * @param scale_x Scale factor in the x-axis direction
+         * @param scale_y Scale factor in the y-axis direction
+         */
+        void set_scale(float scale_x, float scale_y);
+        ///@}
+
+        /** @name Shear
+         */
+        ///@{
+        /** Shear factor in the x-axis direction. */
         float shear_x = 0.f;
+
+        /** Shear factor in the y-axis direction. */
         float shear_y = 0.f;
 
-        // Tint
+        /**
+         * Set the shear of the sprite.
+         *
+         * This utility function is equal to
+         * @code{.cpp}
+         * // extern kex::Sprite sprite;
+         * sprite.shear_x = shear_x;
+         * sprite.shear_y = shear_y;
+         * @endcode
+         *
+         * @param shear_x Shear factor in the x-axis direction
+         * @param shear_y Shear factor in the y-axis direction
+         */
+        void set_shear(float shear_x, float shear_y);
+        ///@}
+
+        /** @name Tint
+         *  Sprites support tinting by multiplying the source texture color by the specified tint color.
+         *  @verbatim embed:rst:leading-asterisk
+         *  .. note::
+         *     Currently, sprite's alpha can be manipulated by changing the alpha component of the tint color.
+         *  @endverbatim
+         */
+        ///@{
+        /** Red component of the tint color. */
         float tint_r = 1.f;
+
+        /** Green component of the tint color. */
         float tint_g = 1.f;
+
+        /** Blue component of the tint color. */
         float tint_b = 1.f;
+
+        /** Alpha component of the tint color. */
         float tint_a = 1.f;
 
+        /**
+         * Set the tint color of the sprite.
+         *
+         * This utility function is equal to
+         * @code{.cpp}
+         * // extern kex::Sprite sprite;
+         * sprite.tint_r = r;
+         * sprite.tint_g = g;
+         * sprite.tint_b = b;
+         * sprite.tint_a = a;
+         * @endcode
+         *
+         * @param r Red component of the tint color
+         * @param g Greem component of the tint color
+         * @param b Blue component of the tint color
+         * @param a Alpha component of the tint color
+         */
+        void set_tint(float r, float g, float b, float a = 1.f);
+        ///@}
+
+        /**
+         * Create a sprite from a texture, inheriting its width and height.
+         *
+         * @param texture Texture for the sprite
+         */
         explicit Sprite(const Texture &texture);
 
+        /**
+         * Create a sprite from a texture region.
+         *
+         * @param texture Texture for the sprite
+         * @param region Region of the texture used to render the sprite
+         */
         explicit Sprite(const Texture &texture, const RectangleDef &region);
 
         ~Sprite();
 
-        [[nodiscard]] const Texture &texture() const;
-
-        [[nodiscard]] const RectangleDef &texture_region() const;
-
+        /** Width of the sprite. */
         [[nodiscard]] int width() const;
 
+        /** Height of the sprite. */
         [[nodiscard]] int height() const;
 
-        void set_position(float x, float y);
-
-        void set_scale(float scale_x, float scale_y);
-
-        void set_shear(float shear_x, float shear_y);
-
-        void set_tint(float r, float g, float b, float a = 1.f);
-
+        /** @name Transform matrix
+         */
+        ///@{
+        /**
+         * Retrieve a 3 x 3 column-major homogeneous transformation matrix in a flat array.
+         * @return Matrix representing the geometrical transformation of the sprite
+         */
         [[nodiscard]] std::array<float, 3 * 3> transform() const;
+        ///@}
 
+        /** @name Texture
+         */
+        ///@{
+        /** Texture for the sprite. */
+        [[nodiscard]] const Texture &texture() const;
+
+        /** Region of the texture used for rendering the sprite. */
+        [[nodiscard]] const RectangleDef &texture_region() const;
+
+        /** Smaller texture u-coordinate */
         [[nodiscard]] float u_min() const;
 
+        /** Larger texture u-coordinate */
         [[nodiscard]] float u_max() const;
 
+        /** Smaller texture v-coordinate */
         [[nodiscard]] float v_min() const;
 
+        /** Larger texture v-coordinate */
         [[nodiscard]] float v_max() const;
+        ///@}
 
     private:
         class Impl;
