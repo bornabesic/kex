@@ -26,8 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include <kex/texture.h>
-#include <iostream>
+#include <kex/texture.hpp>
 
 namespace kex {
 
@@ -40,13 +39,15 @@ namespace kex {
 
             // Load the image
             int n_original_channels;
-            data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
+            stbi_set_flip_vertically_on_load(true);
+            unsigned char *data = stbi_load(path.c_str(), &width, &height, &n_original_channels, 4);
             if (data == nullptr) {
                 throw std::runtime_error("Could not load texture from " + path);
             }
 
             // Generate an OpenGL texture
             glGenTextures(1, &id);
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, id);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -62,7 +63,7 @@ namespace kex {
         }
 
         void bind() const {
-            glBindTexture(GL_TEXTURE_2D, id);
+            Texture::bind(id);
         }
 
         ~Impl() {
@@ -71,17 +72,28 @@ namespace kex {
 
     private:
         GLuint id = 0;
-        unsigned char *data = nullptr;
         int width = 0;
         int height = 0;
 
         friend Texture;
     };
 
-    Texture::Texture(const std::string &path, const bool mipmap) : impl(std::make_unique<Texture::Impl>(path, mipmap)) {}
+    Texture::Texture(const std::string &path, const bool mipmap) : impl(
+            std::make_unique<Texture::Impl>(path, mipmap)) {}
+
     void Texture::bind() const { impl->bind(); }
-    int Texture::get_width() const { return impl->width; }
-    int Texture::get_height() const { return impl->height; }
+
+    int Texture::width() const { return impl->width; }
+
+    int Texture::height() const { return impl->height; }
+
+    unsigned int Texture::id() const { return impl->id; }
+
+    void Texture::bind(unsigned int id) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+
     Texture::~Texture() = default;
 
 } // kex

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Textures
+- Sprites (instanced rendering via `SpriteBatch`)
+- Utilities
+  - `Shader` + `Program`
+  - `VertexArray` + `Buffer`
 - SDL 2 demo
 - OpenGL function loading via GLEW (optional; enabled by default)
 

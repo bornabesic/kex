@@ -16,21 +16,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef KEX_TEXTURE_H
-#define KEX_TEXTURE_H
+#ifndef KEX_SPRITEBATCH_HPP
+#define KEX_SPRITEBATCH_HPP
 
-#include <string>
 #include <memory>
+#include <kex/sprite.hpp>
 
 namespace kex {
 
-    class Texture {
+    class SpriteBatch {
     public:
-        explicit Texture(const std::string &path, bool mipmap = false);
-        void bind() const;
-        [[nodiscard]] int get_width() const;
-        [[nodiscard]] int get_height() const;
-        ~Texture();
+        SpriteBatch();
+
+        void add(const Sprite &sprite);
+
+        ~SpriteBatch();
 
     private:
         class Impl;
@@ -38,6 +38,6 @@ namespace kex {
         std::unique_ptr<Impl> impl;
     };
 
-} // kex
+}
 
-#endif //KEX_TEXTURE_H
+#endif //KEX_SPRITEBATCH_HPP
