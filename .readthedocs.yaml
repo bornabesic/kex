@@ -6,9 +6,4 @@ build:
   apt_packages:
     - doxygen
   commands:
-    - cd docs/
-    - pwd
-    - pip install -r requirements.txt
-    - doxygen
-    - make html
-    - cp -r build/html ../_readthedocs/html/
+    - cd docs/ && pip install -r requirements.txt && doxygen && make html && cp -r build/html ../_readthedocs/html/
