@@ -27,6 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <kex/spritebatch.hpp>
 
 #include <glad/gles2.h>
+#include <kex/font.hpp>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -51,6 +52,8 @@ int main() {
     kex::Texture texture("/tmp/tex.png");
     kex::Sprite sprite(texture);
     kex::Sprite sprite2(texture);
+
+    kex::Font font("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12, 0, 0x017F);
 
     glClearColor(0.f, 0.f, 0.f, 1.f);
 

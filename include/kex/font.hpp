@@ -16,22 +16,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <kex/utils.hpp>
-#include <vector>
+#pragma once
+
 #include <string>
-#include <fstream>
+#include <kex/text.hpp>
+#include <memory>
 
 namespace kex {
 
-    std::vector<char> read_file(const std::string &path) {
-        std::ifstream input_stream(path, std::ios::binary);
-        input_stream.seekg(0, std::ios::end);
-        const auto file_size = input_stream.tellg();
-        input_stream.seekg(0, std::ios::beg);
+    class Font {
+    public:
+        Font(const std::string &ttf_path, int size, int unicode_start, int unicode_end, unsigned int oversampling = 1);
 
-        std::vector<char> file_bytes(file_size);
-        input_stream.read(file_bytes.data(), file_size);
-        return file_bytes;
-    }
+        [[nodiscard]] Text make(const std::string &text) const;
+
+        ~Font();
+
+    private:
+        class Impl;
+
+        std::unique_ptr<Impl> impl;
+    };
 
 }
