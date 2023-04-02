@@ -162,7 +162,9 @@ namespace kex {
          * @param texture Texture for the sprite
          * @param region Region of the texture used to render the sprite
          */
-        explicit Sprite(const Texture &texture, const RectangleDef &region);
+        Sprite(const Texture &texture, const RectangleDef &region);
+
+        Sprite(Sprite &&) noexcept;
 
         ~Sprite();
 

@@ -18,10 +18,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdexcept>
 #include <kex/font.hpp>
+#include <kex/texture.hpp>
 #include <kex/utils.hpp>
+#include <kex/sprite.hpp>
 
 #define STB_TRUETYPE_IMPLEMENTATION
-
 #include <stb_truetype.h>
 
 namespace kex {
@@ -65,21 +66,27 @@ namespace kex {
             // }
 
             stbtt_PackEnd(&ctx);
+
+            texture = std::make_unique<Texture>(bitmap, BITMAP_SIZE, BITMAP_SIZE, PixelFormat::LUMINANCE, true);
         }
 
         Text make(const std::string &text) {
             const auto codepoints = get_codepoints_from_utf8(text);
 
             stbtt_aligned_quad quad;
+            std::vector<Sprite> char_sprites;
+            char_sprites.reserve(codepoints.size());
             for (const auto codepoint: codepoints) {
                 float x = 0;
                 float y = 0;
                 stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, codepoint - unicode_start, &x, &y,
                                     &quad, true);
 
-                // TODO Use quad information
+                const RectangleDef region = {static_cast<int>(quad.x0), static_cast<int>(quad.y0),
+                                             static_cast<int>(quad.x1 - quad.x0), static_cast<int>(quad.y1 - quad.y0)};
+                char_sprites.emplace_back(*texture, region);
             }
-            return Text(text);
+            return Text(text, std::move(char_sprites));
         }
 
     private:
@@ -89,6 +96,7 @@ namespace kex {
         int unicode_end;
         std::vector<unsigned char> bitmap;
         std::vector<stbtt_packedchar> packed_chars;
+        std::unique_ptr<Texture> texture;
         // std::vector<int> glyph_indices;
     };
 

@@ -23,13 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace kex {
 
     class Text::Impl {
+    public:
+        Impl(std::vector<Sprite> &&char_sprites) : char_sprites(std::move(char_sprites)) {}
+
     private:
         std::vector<Sprite> char_sprites;
     };
 
-    Text::Text(const std::string &text) : text(text) {
-        // TODO
-    }
+    Text::Text(const std::string &text, std::vector<Sprite> &&char_sprites) : text(text) {}
 
     Text::~Text() = default;
 

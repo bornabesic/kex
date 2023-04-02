@@ -21,8 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace kex {
+
+    enum PixelFormat {
+        RGBA,
+        LUMINANCE,
+    };
 
     class Texture {
     public:
@@ -33,6 +39,9 @@ namespace kex {
          * @param mipmap Flag indicating whether to generate a texture mipmap
          */
         explicit Texture(const std::string &path, bool mipmap = false);
+
+        explicit Texture(const std::vector<unsigned char> &data, int width, int height, PixelFormat format,
+                         bool mipmap);
 
         /**
          * Bind the current texture for rendering.

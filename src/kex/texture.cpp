@@ -43,7 +43,16 @@ namespace kex {
                 throw std::runtime_error("Could not load texture from " + path);
             }
 
-            // Generate an OpenGL texture
+            load(data, width, height, PixelFormat::RGBA);
+
+            stbi_image_free(data); // Free image data from RAM
+        }
+
+        Impl(const std::vector<unsigned char> &data, int width, int height, PixelFormat format, bool mipmap = false) {
+            load(data.data(), width, height, format, mipmap);
+        }
+
+        void load(const unsigned char *data, int w, int h, PixelFormat fmt, bool mipmap = false) {
             glGenTextures(1, &id);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, id);
@@ -51,13 +60,17 @@ namespace kex {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+            GLenum pixel_format;
+            if (fmt == PixelFormat::RGBA) pixel_format = GL_RGBA;
+            else if (fmt == PixelFormat::LUMINANCE) pixel_format = GL_LUMINANCE;
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, pixel_format, GL_UNSIGNED_BYTE, data);
             if (mipmap) {
                 glGenerateMipmap(GL_TEXTURE_2D);
             }
 
             glBindTexture(GL_TEXTURE_2D, 0); // Unbind
-            stbi_image_free(data); // Free image data from RAM
         }
 
         void bind() const {
@@ -91,6 +104,10 @@ namespace kex {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
     }
+
+    Texture::Texture(const std::vector<unsigned char> &data, int width, int height, PixelFormat format, bool mipmap)
+            : impl(
+            std::make_unique<Impl>(data, width, height, format, mipmap)) {}
 
     Texture::~Texture() = default;
 

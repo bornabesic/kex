@@ -34,23 +34,28 @@ namespace kex {
         return file_bytes;
     }
 
-    std::vector<int> get_codepoints_from_utf8(const std::string &text) {
-        std::vector<int> codepoints;
-        for (const char byte : text) {
-            // TODO
+    std::vector<uint32_t> get_codepoints_from_utf8(const std::string &text) {
+        std::vector<uint32_t> codepoints;
+        size_t i = 0;
+        while (i < text.size()) {
+            // TODO Add continuation byte check
 
-            if (byte & 0b10000000) {
-
+            uint32_t codepoint = 0;
+            if ((text[i] & 0b10000000) == 0b00000000) {
+                codepoint = text[i++];
+            } else if ((text[i] & 0b11100000) == 0b11000000) {
+                codepoint = ((text[i++] & 0x1F) << 6) | (text[i++] & 0x3F);
+            } else if ((text[i] & 0b11110000) == 0b11100000) {
+                codepoint = ((text[i++] & 0xF0) << 12) | ((text[i++] & 0x3F) << 6) |
+                            (text[i++] & 0x3F);
+            } else if ((text[i] & 0b11111000) == 0b11110000) {
+                codepoint = ((text[i++] & 0x07) << 18) | ((text[i++] & 0x3F) << 12) |
+                            ((text[i++] & 0x3F) << 6) | (text[i++] & 0x3F);
+            } else {
+                throw std::runtime_error("Invalid UTF-8 byte.");
             }
-            else if ((byte & 0b11100000) == 0b11000000) {
 
-            }
-            else if ((byte & 0b11110000) == 0b11100000) {
-
-            }
-            else if ((byte & 0b11111000) == 0b11110000) {
-
-            }
+            codepoints.push_back(codepoint);
         }
         return codepoints;
     }

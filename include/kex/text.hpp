@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <kex/sprite.hpp>
+
 #include <string>
 #include <memory>
 
@@ -27,7 +29,7 @@ namespace kex {
     public:
         std::string text;
 
-        explicit Text(const std::string &text);
+        explicit Text(const std::string &text, std::vector<Sprite> &&char_sprites);
 
         ~Text();
 

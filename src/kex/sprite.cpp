@@ -141,6 +141,8 @@ namespace kex {
         this->shear_y = shear_y;
     }
 
+    Sprite::Sprite(Sprite &&other) noexcept = default;
+
     Sprite::~Sprite() = default;
 
 }
