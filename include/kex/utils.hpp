@@ -24,6 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace kex {
     std::vector<char> read_file(const std::string &path);
+
+    std::vector<int> get_codepoints_from_utf8(const std::string &text);
 }
 
 #endif //KEX_UTILS_HPP

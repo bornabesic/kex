@@ -34,4 +34,25 @@ namespace kex {
         return file_bytes;
     }
 
+    std::vector<int> get_codepoints_from_utf8(const std::string &text) {
+        std::vector<int> codepoints;
+        for (const char byte : text) {
+            // TODO
+
+            if (byte & 0b10000000) {
+
+            }
+            else if ((byte & 0b11100000) == 0b11000000) {
+
+            }
+            else if ((byte & 0b11110000) == 0b11100000) {
+
+            }
+            else if ((byte & 0b11111000) == 0b11110000) {
+
+            }
+        }
+        return codepoints;
+    }
+
 }

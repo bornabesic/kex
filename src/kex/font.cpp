@@ -28,10 +28,11 @@ namespace kex {
 
     class Font::Impl {
     public:
-        Impl(const std::string &ttf_path, int size, int unicode_start, int unicode_end, unsigned int oversampling) {
+        Impl(const std::string &ttf_path, int size, int unicode_start, int unicode_end, unsigned int oversampling)
+                : unicode_start(unicode_start), unicode_end(unicode_end) {
             constexpr int padding = 1;
-            const int bitmap_size = 512; // TODO Move
-            bitmap.resize(bitmap_size * bitmap_size);
+
+            bitmap.resize(BITMAP_SIZE * BITMAP_SIZE);
 
             const int unicode_count = unicode_end - unicode_start + 1;
 
@@ -42,7 +43,7 @@ namespace kex {
             stbtt_InitFont(&font_info, ttf_bytes_ptr, 0);
 
             stbtt_pack_context ctx;
-            auto success = stbtt_PackBegin(&ctx, bitmap.data(), bitmap_size, bitmap_size, 0, padding,
+            auto success = stbtt_PackBegin(&ctx, bitmap.data(), BITMAP_SIZE, BITMAP_SIZE, 0, padding,
                                            nullptr);
             if (!success) {
                 throw std::runtime_error("Could not load the font.");
@@ -57,17 +58,38 @@ namespace kex {
                 throw std::runtime_error("Could not pack the font.");
             }
 
+            // glyph_indices.reserve(unicode_count);
+            // for (int codepoint = unicode_start; codepoint <= unicode_end; ++codepoint) {
+            //     const auto glyph_index = stbtt_FindGlyphIndex(&font_info, codepoint);
+            //     glyph_indices.push_back(glyph_index);
+            // }
+
             stbtt_PackEnd(&ctx);
         }
 
         Text make(const std::string &text) {
-            // TODO
+            const auto codepoints = get_codepoints_from_utf8(text);
+
+            stbtt_aligned_quad quad;
+            for (const auto codepoint: codepoints) {
+                float x = 0;
+                float y = 0;
+                stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, codepoint - unicode_start, &x, &y,
+                                    &quad, true);
+
+                // TODO Use quad information
+            }
             return Text(text);
         }
 
     private:
+        static constexpr int BITMAP_SIZE = 512;
+
+        int unicode_start;
+        int unicode_end;
         std::vector<unsigned char> bitmap;
         std::vector<stbtt_packedchar> packed_chars;
+        // std::vector<int> glyph_indices;
     };
 
     Font::Font(const std::string &ttf_path, int size, int unicode_start, int unicode_end, unsigned int oversampling)
