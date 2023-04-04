@@ -48,7 +48,8 @@ namespace kex {
             stbi_image_free(data); // Free image data from RAM
         }
 
-        Impl(const std::vector<unsigned char> &data, int width, int height, PixelFormat format, bool mipmap = false) {
+        Impl(const std::vector<unsigned char> &data, int width, int height, PixelFormat format, bool mipmap = false)
+                : width(width), height(height) {
             load(data.data(), width, height, format, mipmap);
         }
 

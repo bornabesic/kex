@@ -23,10 +23,10 @@ namespace kex {
 
     class Sprite::Impl {
     public:
-        explicit Impl(const Texture &texture) :
-                Impl(texture, {0, 0, texture.width(), texture.height()}) {}
+        explicit Impl(const std::shared_ptr<Texture> texture) :
+                Impl(texture, {0, 0, texture->width(), texture->height()}) {}
 
-        explicit Impl(const Texture &texture, const RectangleDef &rectangle) :
+        explicit Impl(const std::shared_ptr<Texture> &texture, const RectangleDef &rectangle) :
                 texture(texture),
                 texture_region(rectangle),
                 u_min(compute_u_min(rectangle, texture)),
@@ -70,36 +70,36 @@ namespace kex {
         }
 
     private:
-        const Texture &texture;
+        const std::shared_ptr<Texture> texture;
         const RectangleDef texture_region;
         const float u_min, u_max, v_min, v_max;
         const float w, h;
 
-        static inline float compute_u_min(const RectangleDef &region, const Texture &texture) {
-            return static_cast<float>(region.x) / texture.width();
+        static inline float compute_u_min(const RectangleDef &region, const std::shared_ptr<Texture> texture) {
+            return static_cast<float>(region.x) / texture->width();
         }
 
-        static inline float compute_u_max(const RectangleDef &region, const Texture &texture) {
-            return static_cast<float>(region.x + region.w) / texture.width();
+        static inline float compute_u_max(const RectangleDef &region, const std::shared_ptr<Texture> texture) {
+            return static_cast<float>(region.x + region.w) / texture->width();
         }
 
-        static inline float compute_v_min(const RectangleDef &region, const Texture &texture) {
-            return 1 - static_cast<float>(region.y + region.h) / texture.height();
+        static inline float compute_v_min(const RectangleDef &region, const std::shared_ptr<Texture> texture) {
+            return 1 - static_cast<float>(region.y + region.h) / texture->height();
         }
 
-        static inline float compute_v_max(const RectangleDef &region, const Texture &texture) {
-            return 1 - static_cast<float>(region.y) / texture.height();
+        static inline float compute_v_max(const RectangleDef &region, const std::shared_ptr<Texture> texture) {
+            return 1 - static_cast<float>(region.y) / texture->height();
         }
 
         friend Sprite;
     };
 
-    Sprite::Sprite(const kex::Texture &texture) : impl(std::make_unique<Impl>(texture)) {}
+    Sprite::Sprite(const std::shared_ptr<Texture> texture) : impl(std::make_unique<Impl>(texture)) {}
 
-    Sprite::Sprite(const Texture &texture, const RectangleDef &region) : impl(
+    Sprite::Sprite(const std::shared_ptr<Texture> texture, const RectangleDef &region) : impl(
             std::make_unique<Impl>(texture, region)) {}
 
-    const Texture &Sprite::texture() const { return impl->texture; }
+    std::shared_ptr<Texture> Sprite::texture() const { return impl->texture; }
 
     const RectangleDef &Sprite::texture_region() const { return impl->texture_region; }
 

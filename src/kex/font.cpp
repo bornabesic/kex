@@ -67,7 +67,7 @@ namespace kex {
 
             stbtt_PackEnd(&ctx);
 
-            texture = std::make_unique<Texture>(bitmap, BITMAP_SIZE, BITMAP_SIZE, PixelFormat::LUMINANCE, true);
+            texture = std::make_shared<Texture>(bitmap, BITMAP_SIZE, BITMAP_SIZE, PixelFormat::LUMINANCE, true);
         }
 
         Text make(const std::string &text) {
@@ -96,8 +96,10 @@ namespace kex {
         int unicode_end;
         std::vector<unsigned char> bitmap;
         std::vector<stbtt_packedchar> packed_chars;
-        std::unique_ptr<Texture> texture;
+        std::shared_ptr<Texture> texture;
         // std::vector<int> glyph_indices;
+
+        friend Font;
     };
 
     Font::Font(const std::string &ttf_path, int size, int unicode_start, int unicode_end, unsigned int oversampling)

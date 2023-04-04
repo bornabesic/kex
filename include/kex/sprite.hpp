@@ -154,7 +154,7 @@ namespace kex {
          *
          * @param texture Texture for the sprite
          */
-        explicit Sprite(const Texture &texture);
+        explicit Sprite(const std::shared_ptr<Texture> texture);
 
         /**
          * Create a sprite from a texture region.
@@ -162,7 +162,7 @@ namespace kex {
          * @param texture Texture for the sprite
          * @param region Region of the texture used to render the sprite
          */
-        Sprite(const Texture &texture, const RectangleDef &region);
+        Sprite(const std::shared_ptr<Texture> texture, const RectangleDef &region);
 
         Sprite(Sprite &&) noexcept;
 
@@ -188,7 +188,7 @@ namespace kex {
          */
         ///@{
         /** Texture for the sprite. */
-        [[nodiscard]] const Texture &texture() const;
+        [[nodiscard]] std::shared_ptr<Texture> texture() const;
 
         /** Region of the texture used for rendering the sprite. */
         [[nodiscard]] const RectangleDef &texture_region() const;

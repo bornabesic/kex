@@ -28,6 +28,8 @@ namespace kex {
 
     private:
         std::vector<Sprite> char_sprites;
+
+        friend Text;
     };
 
     Text::Text(const std::string &text, std::vector<Sprite> &&char_sprites) : text(text) {}

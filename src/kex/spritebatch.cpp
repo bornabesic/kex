@@ -126,8 +126,8 @@ namespace kex {
 
         void add(const Sprite &sprite) {
             const auto &texture = sprite.texture();
-            auto &group_data = groups[texture.id()];
-            group_data.texture_id = texture.id();
+            auto &group_data = groups[texture->id()];
+            group_data.texture_id = texture->id();
             const auto transform = sprite.transform();
             group_data.s_transforms.insert(
                     group_data.s_transforms.end(),
