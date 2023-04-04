@@ -31,6 +31,8 @@ namespace kex {
 
         explicit Text(const std::string &text, std::vector<Sprite> &&char_sprites);
 
+        std::vector<Sprite> &char_sprites() const;
+
         ~Text();
 
     private:

@@ -82,9 +82,13 @@ namespace kex {
                 stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, codepoint - unicode_start, &x, &y,
                                     &quad, true);
 
-                const RectangleDef region = {static_cast<int>(quad.x0), static_cast<int>(quad.y0),
-                                             static_cast<int>(quad.x1 - quad.x0), static_cast<int>(quad.y1 - quad.y0)};
-                char_sprites.emplace_back(*texture, region);
+                const int region_x = quad.s0 * BITMAP_SIZE;
+                const int region_y = quad.t0 * BITMAP_SIZE;
+                const int region_w = (quad.s1 - quad.s0) * BITMAP_SIZE;
+                const int region_h = (quad.t1 - quad.t0) * BITMAP_SIZE;
+                const RectangleDef region = {region_x, region_y,
+                                             region_w, region_h};
+                char_sprites.emplace_back(texture, region);
             }
             return Text(text, std::move(char_sprites));
         }
@@ -107,6 +111,10 @@ namespace kex {
             std::make_unique<Impl>(ttf_path, size, unicode_start, unicode_end, oversampling)) {}
 
     Text Font::make(const std::string &text) const { return impl->make(text); }
+
+    const std::shared_ptr<Texture> Font::texture() {
+        return impl->texture;
+    }
 
     Font::~Font() = default;
 

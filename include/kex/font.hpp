@@ -30,6 +30,8 @@ namespace kex {
 
         [[nodiscard]] Text make(const std::string &text) const;
 
+        const std::shared_ptr<Texture> texture();
+
         ~Font();
 
     private:

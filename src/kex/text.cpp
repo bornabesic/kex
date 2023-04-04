@@ -32,7 +32,10 @@ namespace kex {
         friend Text;
     };
 
-    Text::Text(const std::string &text, std::vector<Sprite> &&char_sprites) : text(text) {}
+    Text::Text(const std::string &text, std::vector<Sprite> &&char_sprites) : text(text), impl(std::make_unique<Impl>(
+            std::move(char_sprites))) {}
+
+    std::vector<Sprite> &Text::char_sprites() const { return impl->char_sprites; }
 
     Text::~Text() = default;
 
