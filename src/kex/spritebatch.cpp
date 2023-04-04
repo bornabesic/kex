@@ -175,8 +175,8 @@ namespace kex {
                         0, 4, data.instance_count // NOLINT(cppcoreguidelines-narrowing-conversions)
                 );
 
-                --last_used_ctx_index;
             }
+            --last_used_ctx_index;
         }
 
     private:
