@@ -103,7 +103,7 @@ namespace kex {
 
                 // Initialize vertex attributes
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_positions);
-                ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords);
+                ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords); // FIXME Attribute does not advance properly
                 ctx.vao.add_attribute<VertexAttr::MAT3, 1>(ctx.s_transforms);
                 ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_tints);
             }
