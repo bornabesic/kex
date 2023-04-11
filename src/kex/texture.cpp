@@ -62,11 +62,22 @@ namespace kex {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            GLenum pixel_format;
-            if (fmt == PixelFormat::RGBA) pixel_format = GL_RGBA;
-            else if (fmt == PixelFormat::LUMINANCE) pixel_format = GL_LUMINANCE;
+            GLenum format;
+            GLint internal_format;
+            if (fmt == PixelFormat::RGBA) {
+                format = GL_RGBA;
+                internal_format = GL_RGBA;
+            }
+            else if (fmt == PixelFormat::LUMINANCE) {
+                format = GL_RED;
+                internal_format = GL_R8;
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
+            }
 
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, pixel_format, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, internal_format, w, h, 0, format, GL_UNSIGNED_BYTE, data);
             if (mipmap) {
                 glGenerateMipmap(GL_TEXTURE_2D);
             }
