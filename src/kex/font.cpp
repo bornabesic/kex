@@ -83,10 +83,10 @@ namespace kex {
                 stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, char_index, &x, &y,
                                     &quad, true);
 
-                const int region_x = quad.s0 * BITMAP_SIZE;
-                const int region_y = quad.t0 * BITMAP_SIZE;
-                const int region_w = (quad.s1 - quad.s0) * BITMAP_SIZE;
-                const int region_h = (quad.t1 - quad.t0) * BITMAP_SIZE;
+                const auto region_x = static_cast<int>(std::round(quad.s0 * BITMAP_SIZE));
+                const auto region_y = static_cast<int>(std::round(quad.t0 * BITMAP_SIZE));
+                const auto region_w = static_cast<int>(std::round((quad.s1 - quad.s0) * BITMAP_SIZE));
+                const auto region_h = static_cast<int>(std::round((quad.t1 - quad.t0) * BITMAP_SIZE));
                 if (region_w == 0 || region_h == 0) continue;
                 const RectangleDef region = {region_x, region_y,
                                              region_w, region_h};
