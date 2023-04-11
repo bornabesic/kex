@@ -33,11 +33,12 @@ namespace kex {
         #version 300 es
 
         layout (location = 0) in highp vec2 base_position_in;
-        layout (location = 1) in highp vec2 tex_coords_in;
-        layout (location = 2) in highp mat3 transform_in;
-        // layout (location = 3)
+        layout (location = 1) in highp vec4 tex_coords_bottom_in;
+        layout (location = 2) in highp vec4 tex_coords_top_in;
+        layout (location = 3) in highp mat3 transform_in;
         // layout (location = 4)
-        layout (location = 5) in highp vec4 tint_in;
+        // layout (location = 5)
+        layout (location = 6) in highp vec4 tint_in;
 
         uniform highp int width;
         uniform highp int height;
@@ -48,8 +49,20 @@ namespace kex {
         void main() {
             highp vec3 position = transform_in * vec3(base_position_in, 1) / vec3(width / 2, -height / 2, 1) - vec3(1, -1, 0);
             gl_Position = vec4(position.xy, 0, position.z);
-            tex_coords = tex_coords_in;
             tint = tint_in;
+
+            if (gl_VertexID % 4 == 0) {
+                tex_coords = tex_coords_bottom_in.xy;
+            }
+            else if (gl_VertexID % 4 == 1) {
+                tex_coords = tex_coords_bottom_in.zw;
+            }
+            else if (gl_VertexID % 4 == 2) {
+                tex_coords = tex_coords_top_in.xy;
+            }
+            else {
+                tex_coords = tex_coords_top_in.zw;
+            }
         }
     )";
 
@@ -78,14 +91,16 @@ namespace kex {
     struct SpriteBatchCtx {
         VertexArray vao;
         StaticArrayBuffer v_positions{4 * 2 * sizeof(float)};
-        StreamArrayBuffer v_tex_coords;
+        StreamArrayBuffer v_tex_coords_bottom;
+        StreamArrayBuffer v_tex_coords_top;
         StreamArrayBuffer s_transforms;
         StreamArrayBuffer s_tints;
     };
 
     struct SpriteBatchGroupData {
         unsigned int texture_id = 0;
-        std::vector<float> v_tex_coords;
+        std::vector<float> v_tex_coords_bottom;
+        std::vector<float> v_tex_coords_top;
         std::vector<float> s_transforms;
         std::vector<float> s_tints;
         int instance_count = 0;
@@ -103,7 +118,8 @@ namespace kex {
 
                 // Initialize vertex attributes
                 ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_positions);
-                ctx.vao.add_attribute<VertexAttr::VEC2>(ctx.v_tex_coords); // FIXME Attribute does not advance properly
+                ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.v_tex_coords_bottom);
+                ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.v_tex_coords_top);
                 ctx.vao.add_attribute<VertexAttr::MAT3, 1>(ctx.s_transforms);
                 ctx.vao.add_attribute<VertexAttr::VEC4, 1>(ctx.s_tints);
             }
@@ -133,11 +149,16 @@ namespace kex {
                     group_data.s_transforms.end(),
                     transform.begin(), transform.end()
             );
-            group_data.v_tex_coords.insert(
-                    group_data.v_tex_coords.end(),
+            group_data.v_tex_coords_bottom.insert(
+                    group_data.v_tex_coords_bottom.end(),
                     {
                             sprite.u_min(), sprite.v_min(),
                             sprite.u_max(), sprite.v_min(),
+                    }
+            );
+            group_data.v_tex_coords_top.insert(
+                    group_data.v_tex_coords_top.end(),
+                    {
                             sprite.u_min(), sprite.v_max(),
                             sprite.u_max(), sprite.v_max(),
                     }
@@ -159,8 +180,14 @@ namespace kex {
 
             for (const auto &[texture_id, data]: groups) {
                 auto &ctx = Impl::ctxs[ctx_index];
-                ctx.v_tex_coords.orphan(data.instance_count * 4 * 2 * sizeof(float));
-                ctx.v_tex_coords.update(data.v_tex_coords.data(), data.v_tex_coords.size() * sizeof(float));
+                ctx.vao.bind();
+                Texture::bind(data.texture_id);
+
+                ctx.v_tex_coords_bottom.orphan(data.instance_count * 4 * sizeof(float));
+                ctx.v_tex_coords_bottom.update(data.v_tex_coords_bottom.data(), data.v_tex_coords_bottom.size() * sizeof(float));
+
+                ctx.v_tex_coords_top.orphan(data.instance_count * 4 * sizeof(float));
+                ctx.v_tex_coords_top.update(data.v_tex_coords_top.data(), data.v_tex_coords_top.size() * sizeof(float));
 
                 ctx.s_transforms.orphan(data.instance_count * 3 * 3 * sizeof(float));
                 ctx.s_transforms.update(data.s_transforms.data(), data.s_transforms.size() * sizeof(float));
@@ -168,8 +195,6 @@ namespace kex {
                 ctx.s_tints.orphan(data.instance_count * 4 * sizeof(float));
                 ctx.s_tints.update(data.s_tints.data(), data.s_tints.size() * sizeof(float));
 
-                ctx.vao.bind();
-                Texture::bind(data.texture_id);
                 glDrawArraysInstanced(
                         GL_TRIANGLE_STRIP,
                         0, 4, data.instance_count // NOLINT(cppcoreguidelines-narrowing-conversions)
