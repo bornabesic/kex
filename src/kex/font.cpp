@@ -73,19 +73,21 @@ namespace kex {
         Text make(const std::string &text) {
             const auto codepoints = get_codepoints_from_utf8(text);
 
-            stbtt_aligned_quad quad;
             std::vector<Sprite> char_sprites;
             char_sprites.reserve(codepoints.size());
+            stbtt_aligned_quad quad;
+            float x = 0;
+            float y = 0;
             for (const auto codepoint: codepoints) {
-                float x = 0;
-                float y = 0;
-                stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, codepoint - unicode_start, &x, &y,
+                int char_index = codepoint - unicode_start;
+                stbtt_GetPackedQuad(packed_chars.data(), BITMAP_SIZE, BITMAP_SIZE, char_index, &x, &y,
                                     &quad, true);
 
                 const int region_x = quad.s0 * BITMAP_SIZE;
                 const int region_y = quad.t0 * BITMAP_SIZE;
                 const int region_w = (quad.s1 - quad.s0) * BITMAP_SIZE;
                 const int region_h = (quad.t1 - quad.t0) * BITMAP_SIZE;
+                if (region_w == 0 || region_h == 0) continue;
                 const RectangleDef region = {region_x, region_y,
                                              region_w, region_h};
                 char_sprites.emplace_back(texture, region);
